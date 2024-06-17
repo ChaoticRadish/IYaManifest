@@ -5,8 +5,11 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/Common_Wpf;component/Controls/FeatureGroup/Log/LogFlowBox.xaml"/>
         <ResourceDictionary Source="pack://application:,,,/Common_Wpf;component/Controls/FeatureGroup/Log/LogFlowBoxItem.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/Common_Wpf;component/Controls/FeatureGroup/Log/SimpleLogShower.xaml"/>
         <ResourceDictionary Source="pack://application:,,,/Common_Wpf;component/Controls/FeatureGroup/Facility/KeyValuePairContainer.xaml"/>
 
+        <ResourceDictionary Source="pack://application:,,,/Common_Wpf;component/Controls/LayoutPanel/RetractableContainer.xaml"/>
+        
         <ResourceDictionary Source="pack://application:,,,/Common_Wpf;component/Controls/ValueBox/IntShower001.xaml"/>
         <ResourceDictionary Source="pack://application:,,,/Common_Wpf;component/Controls/ValueBox/IntInputer001.xaml"/>
         <ResourceDictionary Source="pack://application:,,,/Common_Wpf;component/Controls/ValueBox/FloatInputer001.xaml"/>

@@ -8,6 +8,9 @@ using System.Windows.Controls;
 
 namespace Common_Wpf.Controls.FeatureGroup
 {
+    /// <summary>
+    /// 键值对容器, 设置内容将被显示到值区域
+    /// </summary>
     public class KeyValuePairContainer : MbContentControl01
     {
         static KeyValuePairContainer()
