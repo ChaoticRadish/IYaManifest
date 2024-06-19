@@ -12,4 +12,10 @@
     <ProjectReference Include="..\Common_Util\Common_Util.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Page Update="Controls\FeatureGroup\Log\SimpleLogShower.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+
 </Project>

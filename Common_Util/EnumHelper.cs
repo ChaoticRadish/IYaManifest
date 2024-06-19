@@ -110,6 +110,29 @@ namespace Common_Util
             return result == null ? default : (T)result;
         }
         /// <summary>
+        /// 尝试将字符串转换为枚举 (优先通过枚举名, 不匹配再通过描述)
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="str"></param>
+        /// <param name="result"></param>
+        /// <returns></returns>
+        public static bool TryConvert<T>(string str, out T? result)
+            where T : Enum
+        {
+            Type type = typeof(T);
+            object? resultObj = Convert(type, str);
+            if (resultObj == null)
+            {
+                result = default;
+                return false;
+            }
+            else
+            {
+                result = (T)resultObj;
+                return true;
+            }
+        }
+        /// <summary>
         /// 将字符串转换为枚举 (优先通过枚举名, 不匹配再通过描述), 转换失败时返回输入的默认值
         /// </summary>
         /// <typeparam name="T"></typeparam>
