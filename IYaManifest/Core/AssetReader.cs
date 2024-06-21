@@ -12,8 +12,10 @@ namespace IYaManifest.Core
     public class AssetReader
     {
         #region 实现映射
-
+        public required MappingConfig Mapping { get; set; }
         #endregion
+
+
 
 
 
