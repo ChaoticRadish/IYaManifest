@@ -16,6 +16,11 @@ namespace Common_Util.Data.Wrapped
     public class SuspendableObservableCollection<T> : ObservableCollection<T>, ISuspendUpdate
     {
         /// <summary>
+        /// 用于测试的ID值
+        /// </summary>
+        public Guid Id { get; } = Guid.NewGuid();
+
+        /// <summary>
         /// 当前允许更新 (未被挂起)
         /// </summary>
         private bool updatesEnabled = true;

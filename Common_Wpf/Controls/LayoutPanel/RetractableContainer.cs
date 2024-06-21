@@ -22,7 +22,7 @@ using System.Windows.Media.Animation;
 namespace Common_Wpf.Controls.LayoutPanel
 {
     /// <summary>
-    /// 带有可收起区域的容器, 内容默认放在主体区域, 可收起区域需设置 <see cref="RetractableAreaTemplate"/>. 
+    /// 带有可收起区域的容器, 内容默认放在主体区域, 可收起区域需设置 <see cref="RetractableAreaContent"/>. 
     /// <para>主体区域宽度为1*, 可收起区域宽度不支持auto</para>
     /// </summary>
     public class RetractableContainer : MbContentControl01
@@ -47,6 +47,8 @@ namespace Common_Wpf.Controls.LayoutPanel
                 OnPropertyChanged(nameof(State));
             };
         }
+
+        
 
 
         #region 配置
@@ -288,18 +290,18 @@ namespace Common_Wpf.Controls.LayoutPanel
         /// <summary>
         /// 可收起区域的模板
         /// </summary>
-        public ControlTemplate? RetractableAreaTemplate
+        public ContentControl? RetractableAreaContent
         {
-            get { return (ControlTemplate?)GetValue(RetractableAreaTemplateProperty); }
-            set { SetValue(RetractableAreaTemplateProperty, value); }
+            get { return (ContentControl?)GetValue(RetractableAreaContentProperty); }
+            set { SetValue(RetractableAreaContentProperty, value); }
         }
 
 
-        // Using a DependencyProperty as the backing store for RetractableAreaTemplate.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty RetractableAreaTemplateProperty =
+        // Using a DependencyProperty as the backing store for RetractableAreaContent.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty RetractableAreaContentProperty =
             DependencyProperty.Register(
-                nameof(RetractableAreaTemplate), 
-                typeof(ControlTemplate), 
+                nameof(RetractableAreaContent), 
+                typeof(ContentControl), 
                 typeof(RetractableContainer), 
                 new PropertyMetadata(null)
                 {

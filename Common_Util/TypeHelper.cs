@@ -103,7 +103,7 @@ namespace Common_Util
         /// <param name="checkType">将被检查的类型</param>
         /// <param name="definition">泛型定义</param>
         /// <returns></returns>
-        public static bool ExistInterfaceIsfinitionFrom(
+        public static bool ExistInterfaceIsDefinitionFrom(
             Type checkType,
             Type definition)
         {

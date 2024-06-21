@@ -27,6 +27,8 @@ namespace Common_Wpf.Controls.LayoutPanel
                 new FrameworkPropertyMetadata(typeof(LeftMenuPageSwitcher)));
         }
 
+        public Guid Id { get; } = Guid.NewGuid();
+
         public LeftMenuPageSwitcher()
         {
             ViewModel = new()
@@ -48,6 +50,7 @@ namespace Common_Wpf.Controls.LayoutPanel
                     }
                 });
             };
+            Pages = [];
             Pages.CollectionChanged += (s, e) =>
             {
                 if (e.NewItems != null)
@@ -71,7 +74,14 @@ namespace Common_Wpf.Controls.LayoutPanel
                         }
                     }
                 }
-                ViewModel.SetPages(Pages);
+
+                ViewModel.SetPages(Pages.Where(
+#if DEBUG
+                    i => i.DebugVisible
+#else
+                    i => i.ReleaseVisible
+#endif
+                    ));
             };
             
         }
@@ -106,7 +116,7 @@ namespace Common_Wpf.Controls.LayoutPanel
                 "Pages",
                 typeof(SuspendableObservableCollection<PageSwitcherItem>),
                 typeof(LeftMenuPageSwitcher),
-                new PropertyMetadata(new SuspendableObservableCollection<PageSwitcherItem>()));
+                new PropertyMetadata(null));
 
 
 
@@ -195,6 +205,21 @@ namespace Common_Wpf.Controls.LayoutPanel
                 {
                 });
 
+
+        public ControlTemplate? CustomPageContainerTemplate
+        {
+            get { return (ControlTemplate)GetValue(CustomPageContainerTemplateProperty); }
+            set { SetValue(CustomPageContainerTemplateProperty, value); }
+        }
+        // Using a DependencyProperty as the backing store for CustomPageContainerTemplate.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty CustomPageContainerTemplateProperty =
+            DependencyProperty.Register(
+                "CustomPageContainerTemplate",
+                typeof(ControlTemplate),
+                typeof(LeftMenuPageSwitcher),
+                new PropertyMetadata(null)
+                {
+                });
 
 
         #endregion

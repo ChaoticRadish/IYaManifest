@@ -7,6 +7,7 @@
     xmlns:converter="clr-namespace:Common_Wpf.Converter"
     xmlns:commonViewModel="clr-namespace:Common_Wpf.CommonViewModel"
     xmlns:commonEnums="clr-namespace:Common_Util.Data.Enums;assembly=Common_Util.Data"
+    xmlns:util="clr-namespace:Common_Wpf.Utility"
     mc:Ignorable="d"
     xmlns:local_LayoutPanel="clr-namespace:Common_Wpf.Controls.LayoutPanel">
 
@@ -69,7 +70,8 @@
                                                             <Setter Property="Template">
                                                                 <Setter.Value>
                                                                     <ControlTemplate>
-                                                                        <Border Background="#01000000">
+                                                                        <Border d:DataContext="{d:DesignInstance commonViewModel:PageSwitcherItem}" 
+                                                                                Background="#01000000">
                                                                             <Border.Style>
                                                                                 <Style TargetType="Border">
                                                                                     <Style.Triggers>
@@ -124,27 +126,14 @@
                                             </ContentControl.Style>
                                         </ContentControl>
 
-                                        
+
                                     </DataTemplate>
                                 </Setter.Value>
                             </Setter>
                         </Style>
 
-                        <Style x:Key="BodyArea" TargetType="Frame">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding CurrentPage, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local_LayoutPanel:LeftMenuPageSwitcher}}, Converter={StaticResource isNullConverter}}"
-                                             Value="True">
-                                    <Setter Property="Content" Value="{Binding Content, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local_LayoutPanel:LeftMenuPageSwitcher}}}">
-                                    </Setter>
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding CurrentPage, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local_LayoutPanel:LeftMenuPageSwitcher}}, Converter={StaticResource isNullConverter}}"
-                                             Value="False">
-                                    <Setter Property="Content" Value="{Binding CurrentPage, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local_LayoutPanel:LeftMenuPageSwitcher}}}">
-                                    </Setter>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                        
+
+
                     </ControlTemplate.Resources>
 
                     <Grid>
@@ -164,6 +153,18 @@
                                             <Setter Property="Template">
                                                 <Setter.Value>
                                                     <ControlTemplate>
+                                                        <!--<StackPanel Orientation="Vertical">
+                                                            <Label Content="{Binding ViewModel.Pages.Id, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local_LayoutPanel:LeftMenuPageSwitcher}}}"></Label>
+
+                                                            <ListBox x:Name="DefaultMenuListBox"
+                                                             HorizontalContentAlignment="Stretch"
+                                                             Style="{StaticResource DefaultMenuList}"
+                                                             ItemsSource="{Binding ViewModel.Pages, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local_LayoutPanel:LeftMenuPageSwitcher}}}"
+                                                             SelectedItem="{Binding ViewModel.CurrentSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local_LayoutPanel:LeftMenuPageSwitcher}}}">
+
+                                                            </ListBox>
+
+                                                        </StackPanel>-->
                                                         <ListBox x:Name="DefaultMenuListBox"
                                                              HorizontalContentAlignment="Stretch"
                                                              Style="{StaticResource DefaultMenuList}"
@@ -185,11 +186,49 @@
 
                                 </Style>
                             </ContentControl.Style>
+
+                            
                         </ContentControl>
 
-                        <Frame Grid.Column="1" Style="{StaticResource BodyArea}"
-                               NavigationUIVisibility="Hidden">
-                        </Frame>
+
+                        <ContentControl Grid.Column="1" 
+                                        DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}">
+                            <ContentControl.Style>
+                                <Style TargetType="ContentControl">
+                                    <Style.Triggers>
+                                        <!-- 已选择页面 -->
+                                        <DataTrigger Binding="{Binding CurrentPage, Converter={StaticResource isNullConverter}}"
+                                                         Value="False">
+                                            <Setter Property="Template" Value="{Binding CustomPageContainerTemplate}"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ContentControl.Style>
+
+                            <Frame DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}">
+                                <Frame.Style>
+                                    <Style TargetType="Frame">
+                                        <Setter Property="NavigationUIVisibility" Value="Hidden"/>
+
+                                        <Style.Triggers>
+                                            <!-- 未选择页面 -->
+                                            <DataTrigger Binding="{Binding CurrentPage, Converter={StaticResource isNullConverter}}"
+                                                         Value="True">
+                                                <Setter Property="Content" Value="{Binding Content}">
+                                                </Setter>
+                                            </DataTrigger>
+                                            <!-- 已选择页面 -->
+                                            <DataTrigger Binding="{Binding CurrentPage, Converter={StaticResource isNullConverter}}"
+                                                         Value="False">
+                                                <Setter Property="Content" Value="{Binding CurrentPage}">
+                                                </Setter>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Frame.Style>
+                            </Frame>
+                            
+                        </ContentControl>
 
                     </Grid>
 

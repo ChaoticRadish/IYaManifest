@@ -188,6 +188,15 @@ namespace Common_Wpf.CommonViewModel
 
         #region 显示状态
         public bool PageShowing { get; internal set; }
+
+        /// <summary>
+        /// 在 Debug 模式下可见
+        /// </summary>
+        public bool DebugVisible { get; set; } = true;
+        /// <summary>
+        /// 在 Release 模式下可见
+        /// </summary>
+        public bool ReleaseVisible { get; set; } = true;
         #endregion
 
         #region 换页指令

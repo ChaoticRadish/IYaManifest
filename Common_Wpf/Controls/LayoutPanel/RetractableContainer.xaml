@@ -271,7 +271,7 @@
                         <!-- 可收起区域 -->
                         <ContentControl Grid.RowSpan="{Binding RetractableAreaLocation, Converter={StaticResource GridCalcRowSpanConverter}, RelativeSource={RelativeSource TemplatedParent}}" 
                                         Grid.ColumnSpan="{Binding RetractableAreaLocation, Converter={StaticResource GridCalcColumnSpanConverter}, RelativeSource={RelativeSource TemplatedParent}}" 
-                                        Template="{Binding RetractableAreaTemplate, RelativeSource={RelativeSource TemplatedParent}}">
+                                        Content="{Binding RetractableAreaContent, RelativeSource={RelativeSource TemplatedParent}}">
                             <Grid.Row>
                                 <MultiBinding Converter="{StaticResource GridCalcRowIndexConverter}">
                                     <Binding Source="RetractableArea"></Binding>

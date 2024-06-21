@@ -151,7 +151,7 @@ namespace Common_Util.Module.Config
                     // 取特性的默认值
                     property.ExistCustomAttribute<DefaultValueAttribute>((att) =>
                     {
-                        value = StringConvertor.Convert(att.ValueString, property.PropertyType);
+                        value = StringConvertHelper.Convert(att.ValueString, property.PropertyType);
                     });
                 }
                 if (value == null) { continue; }
@@ -240,7 +240,7 @@ namespace Common_Util.Module.Config
                         }
                         else
                         {
-                            return StringConvertor.Convert(jElement.ToString(), type);
+                            return StringConvertHelper.Convert(jElement.ToString(), type);
                         }
                     case JsonValueKind.True:
                         return true;
@@ -252,7 +252,7 @@ namespace Common_Util.Module.Config
                     default:
                         {
                             string? str = jElement.GetString();
-                            return StringConvertor.Convert(str, type);
+                            return StringConvertHelper.Convert(str, type);
                         }
 
                 }
