@@ -1,0 +1,23 @@
+﻿<Page x:Class="IYaManifestDemo.Pages.ManifestViewerPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:IYaManifestDemo.Pages"
+      xmlns:commonFG="clr-namespace:Common_Wpf.Controls.FeatureGroup;assembly=Common_Wpf"
+      xmlns:layouts="clr-namespace:Common_Wpf.Controls.LayoutPanel;assembly=Common_Wpf"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="ManifestViewerPage">
+
+    <layouts:RetractableContainer RetractableAreaLocation="Right"
+                                  RetractableAreaWidth="250">
+        <layouts:RetractableContainer.RetractableAreaContent>
+            <ContentControl>
+                <commonFG:SimpleLogShower></commonFG:SimpleLogShower>
+            </ContentControl>
+        </layouts:RetractableContainer.RetractableAreaContent>
+        
+        
+    </layouts:RetractableContainer>
+</Page>
