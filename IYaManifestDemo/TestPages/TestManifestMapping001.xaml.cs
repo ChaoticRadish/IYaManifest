@@ -1,8 +1,11 @@
-﻿using IYaManifest;
+﻿using Common_Util.Data.Struct;
+using IYaManifest;
 using IYaManifest.Core;
+using IYaManifest.Core.Base;
 using IYaManifest.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -112,21 +115,61 @@ namespace IYaManifestDemo.TestPages
         private class TestAsset01 : IAsset
         {
             public string AssetType => "test01";
-        }
-        private class TestAssetWriteReadImpl01 : IAssetWriteReadImpl<TestAsset01>
-        {
 
+            public string AssetId { get; set; } = string.Empty;
+        }
+        private class TestAssetWriteReadImpl01 : AssetWriteReadImplBase<TestAsset01>
+        {
+            public override IOperationResult<TestAsset01> LoadFrom(Stream stream)
+            {
+                throw new NotImplementedException();
+            }
+
+            public override IOperationResult<TestAsset01> LoadFrom(byte[] data)
+            {
+                throw new NotImplementedException();
+            }
+
+            public override IOperationResult<byte[]> Serialization(TestAsset01 asset)
+            {
+                throw new NotImplementedException();
+            }
+
+            public override IOperationResult WriteTo(TestAsset01 asset, Stream stream)
+            {
+                throw new NotImplementedException();
+            }
         }
         private class TestAsset02
         {
         }
-        private class TestAssetWriteReadImpl02 : IAssetWriteReadImpl<TestAsset01>
+        private class TestAssetWriteReadImpl02 : AssetWriteReadImplBase<TestAsset01>
         {
+            public override IOperationResult<TestAsset01> LoadFrom(Stream stream)
+            {
+                throw new NotImplementedException();
+            }
 
+            public override IOperationResult<TestAsset01> LoadFrom(byte[] data)
+            {
+                throw new NotImplementedException();
+            }
+
+            public override IOperationResult<byte[]> Serialization(TestAsset01 asset)
+            {
+                throw new NotImplementedException();
+            }
+
+            public override IOperationResult WriteTo(TestAsset01 asset, Stream stream)
+            {
+                throw new NotImplementedException();
+            }
         }
         private class TestAsset03 : IAsset
         {
             public string AssetType => "test03";
+
+            public string AssetId { get; set; } = string.Empty;
         }
         private class TestAssetWriteReadImpl03
         {
@@ -135,10 +178,30 @@ namespace IYaManifestDemo.TestPages
         private class TestAsset04 : IAsset
         {
             public string AssetType => "test04";
-        }
-        private class TestAssetWriteReadImpl04 : IAssetWriteReadImpl<TestAsset03>
-        {
 
+            public string AssetId { get; set; } = string.Empty;
+        }
+        private class TestAssetWriteReadImpl04 : AssetWriteReadImplBase<TestAsset03>
+        {
+            public override IOperationResult<TestAsset03> LoadFrom(Stream stream)
+            {
+                throw new NotImplementedException();
+            }
+
+            public override IOperationResult<TestAsset03> LoadFrom(byte[] data)
+            {
+                throw new NotImplementedException();
+            }
+
+            public override IOperationResult<byte[]> Serialization(TestAsset03 asset)
+            {
+                throw new NotImplementedException();
+            }
+
+            public override IOperationResult WriteTo(TestAsset03 asset, Stream stream)
+            {
+                throw new NotImplementedException();
+            }
         }
 
     }
