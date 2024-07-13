@@ -1,5 +1,6 @@
 ﻿using Common_Util;
 using Common_Util.Data.Struct;
+using Common_Util.Extensions;
 using IYaManifest.Interfaces;
 using System;
 using System.Collections;
@@ -15,11 +16,11 @@ namespace IYaManifest.Core
     {
         #region 设置数据
 
-        private readonly Dictionary<string, AnalysisSetting> AssetType2AnalysisDic = [];
+        private readonly Dictionary<string, ConfigItem> AssetType2AnalysisDic = [];
 
         #endregion
 
-        public AnalysisSetting this[string key] 
+        public ConfigItem this[string key] 
         { 
             get => AssetType2AnalysisDic[key]; 
         }
@@ -27,7 +28,13 @@ namespace IYaManifest.Core
         public int Count => AssetType2AnalysisDic.Count;
 
         #region 操作
-        public void Set(string assetType, AnalysisSetting setting)
+        /// <summary>
+        /// 设置指定类型的配置项为传入值
+        /// </summary>
+        /// <param name="assetType"></param>
+        /// <param name="setting"></param>
+        /// <exception cref="InvalidOperationException"></exception>
+        public void Set(string assetType, ConfigItem setting)
         {
             var checkResult = setting.CheckImplMatch();
             if (!checkResult)
@@ -43,11 +50,79 @@ namespace IYaManifest.Core
                 AssetType2AnalysisDic.Add(assetType, setting);
             }
         }
+        /// <summary>
+        /// 设置指定类型 (枚举值转换为字符串) 的配置项为传入值
+        /// </summary>
+        /// <typeparam name="TEnum"></typeparam>
+        /// <param name="enum"></param>
+        /// <param name="setting"></param>
+        /// <exception cref="ArgumentException"></exception>
+        public void Set<TEnum>(TEnum @enum, ConfigItem setting) where TEnum : Enum
+        {
+            Set(@enum.ToString() ?? throw new ArgumentException("未能取得枚举值对应字符串"), setting);
+        }
+
+        /// <summary>
+        /// 获取指定类型的配置项
+        /// </summary>
+        /// <param name="assetType"></param>
+        /// <returns></returns>
+        public ConfigItem? Get(string assetType)
+        {
+            if (AssetType2AnalysisDic.TryGetValue(assetType, out _))
+            {
+                return AssetType2AnalysisDic[assetType];
+            }
+            else { return null; }
+        }
+        /// <summary>
+        /// 尝试获取指定类型的配置项
+        /// </summary>
+        /// <param name="assetType"></param>
+        /// <param name="setting"></param>
+        /// <returns></returns>
+        public bool TryGet(string assetType, out ConfigItem? setting)
+        {
+            if (AssetType2AnalysisDic.TryGetValue(assetType, out _))
+            {
+                setting = AssetType2AnalysisDic[assetType];
+                return true;
+            }
+            else
+            {
+                setting = null;
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 获取指定类型 (枚举值转换为字符串) 的配置项
+        /// </summary>
+        /// <typeparam name="TEnum"></typeparam>
+        /// <param name="enum"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        public ConfigItem? Get<TEnum>(TEnum @enum) where TEnum : Enum
+        {
+            return Get(@enum.ToString() ?? throw new ArgumentException("未能取得枚举值对应字符串"));
+        }
+        /// <summary>
+        /// 尝试获取指定类型 (枚举值转换为字符串) 的配置项
+        /// </summary>
+        /// <typeparam name="TEnum"></typeparam>
+        /// <param name="enum"></param>
+        /// <param name="setting"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        public bool TryGet<TEnum>(TEnum @enum, out ConfigItem? setting) where TEnum : Enum
+        {
+            return TryGet(@enum.ToString() ?? throw new ArgumentException("未能取得枚举值对应字符串"), out setting);
+        }
         #endregion
 
 
 
-        public class AnalysisSetting
+        public class ConfigItem
         {
             /// <summary>
             /// 资源数据实体类型
@@ -71,6 +146,19 @@ namespace IYaManifest.Core
             private Type? assetClass;
 
             /// <summary>
+            /// 实例化资源的方法, 如果为 null, 则将使用公共无参构造函数实例化
+            /// </summary>
+            public Func<object>? InstanceAssetFunc { get; set; }
+            /// <summary>
+            /// 实例化一个资源对象
+            /// </summary>
+            /// <returns></returns>
+            public object InstanceAsset()
+            {
+                return instance(AssetClass, InstanceAssetFunc);
+            }
+
+            /// <summary>
             /// 读写实现类型
             /// </summary>
             public required Type WriteReadImplClass 
@@ -90,6 +178,49 @@ namespace IYaManifest.Core
                 }
             }
             private Type? writeReadImplClass;
+
+            /// <summary>
+            /// 实例化读写实现的方法, 如果为 null, 则将使用公共无参构造函数实例化
+            /// </summary>
+            public Func<object>? InstanceWriteReadImplFunc { get; set; }
+            /// <summary>
+            /// 实例化一个读写实现对象
+            /// </summary>
+            /// <returns></returns>
+            public object InstanceWriteReadImpl()
+            {
+                return instance(WriteReadImplClass, InstanceWriteReadImplFunc);
+            }
+
+            private object instance(Type type, Func<object>? instanceFunc)
+            {
+                if (instanceFunc == null)
+                {
+                    if (!type.HavePublicEmptyCtor())
+                    {
+                        throw new Exception("类型没有公共无参构造函数! ");
+                    }
+                    var output = Activator.CreateInstance(type)!;
+                    if (output == null)
+                    {
+                        throw new Exception("实例化失败, 取得 null ");
+                    }
+                    return output;
+                }
+                else 
+                {
+                    var output = instanceFunc();
+                    if (output == null)
+                    {
+                        throw new Exception("实例化失败, 实例化方法返回 null ");
+                    }
+                    if (output.GetType().IsAssignableTo(type))
+                    {
+                        throw new Exception("实例化取得对象无法被分配给指定类型"); 
+                    }
+                    return output;
+                }
+            }
 
 
             /// <summary>

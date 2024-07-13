@@ -12,6 +12,10 @@ namespace IYaManifest.Interfaces
     public interface IAsset
     {
         /// <summary>
+        /// 资源 ID
+        /// </summary>
+        string AssetId { get; set; }
+        /// <summary>
         /// 资源类型 (字符串)
         /// </summary>
         string AssetType { get; }
@@ -24,6 +28,7 @@ namespace IYaManifest.Interfaces
     public abstract class AssetBase<TAssetTypeEnum> : IAsset
         where TAssetTypeEnum : Enum
     {
+        public abstract string AssetId { get; set; }
         string IAsset.AssetType => AssetType.ToString();
         /// <summary>
         /// 资源类型

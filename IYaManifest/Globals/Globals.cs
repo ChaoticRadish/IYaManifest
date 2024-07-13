@@ -9,6 +9,7 @@ namespace IYaManifest
 {
     public static class Globals
     {
+        #region 日志
         /// <summary>
         /// 映射相关的日志
         /// </summary>
@@ -18,5 +19,13 @@ namespace IYaManifest
         /// 测试相关的日志
         /// </summary>
         public static ILevelLogger? TestLogger { get; set; }
+
+
+        public static ILevelLogger? FileReaderLogger { get; set; }
+
+        public static ILevelLogger? FileCreatorLogger { get; set; }
+
+        #endregion
+
     }
 }

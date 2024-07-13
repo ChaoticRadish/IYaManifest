@@ -7,21 +7,21 @@ using System.Threading.Tasks;
 namespace IYaManifest.Enums
 {
     /// <summary>
-    /// 资源数据的存储方式枚举
+    /// 资源加载模式
     /// </summary>
-    public enum AssetDataStorageModeEnum
+    public enum AssetLoadModeEnum
     {
         /// <summary>
-        /// 保存在清单内, 以 base64 编码的形式保存
+        /// 直接转换为对象
         /// </summary>
-        InManifest,
+        ToObject,
         /// <summary>
-        /// 保存在清单内的数据区域
+        /// 懒加载资源
         /// </summary>
-        ManifestData,
+        LazyAsset,
         /// <summary>
-        /// 其他的存储于外部的方式
+        /// 自定义加载方式
         /// </summary>
-        Outside,
+        Custom,
     }
 }

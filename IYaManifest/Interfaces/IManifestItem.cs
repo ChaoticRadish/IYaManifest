@@ -13,6 +13,11 @@ namespace IYaManifest.Interfaces
     public interface IManifestItem
     {
         /// <summary>
+        /// 资源ID
+        /// </summary>
+        string AssetId { get; set; }
+
+        /// <summary>
         /// 资源类型
         /// </summary>
         string AssetType { get; }
@@ -20,23 +25,24 @@ namespace IYaManifest.Interfaces
         /// <summary>
         /// 资源数据存储方式
         /// </summary>
-        AssetDataStorageModeEnum StorageModel { get; set; }
+        AssetDataStorageModeEnum StorageMode { get; set; }
 
         /// <summary>
-        /// 资源数据的 MD5 值
+        /// 资源数据的 MD5 值, 如果为空, 则表示不作校验
         /// </summary>
         byte[] MD5 { get; }
+
 
         #region 如果是在清单文件内
 
         /// <summary>
-        /// 清单文件的开始位置
+        /// 在清单文件内的开始位置
         /// </summary>
-        int LocationStart { get; set; }
+        long LocationStart { get; set; }
         /// <summary>
-        /// 清单文件内的占用长度
+        /// 在清单文件内的占用长度
         /// </summary>
-        int LocationLength { get; set; }
+        long LocationLength { get; set; }
 
         #endregion
     }
