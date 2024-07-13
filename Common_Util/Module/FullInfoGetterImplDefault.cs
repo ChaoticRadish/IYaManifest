@@ -1,4 +1,6 @@
-﻿using Common_Util.Extensions;
+﻿using Common_Util.Attributes.General;
+using Common_Util.Data.Constraint;
+using Common_Util.Extensions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -74,6 +76,40 @@ namespace Common_Util.Module
                         }
                     case DealTypeEnum.IsString:
                         return $"\"{(string)obj}\"";
+                    case DealTypeEnum.IsFileStream:
+                        {
+                            StringBuilder builder = new StringBuilder();
+                            FileStream fs = (FileStream)obj;
+                            builder.Append("[文件流]");
+                            builder.AppendWrap(fs.Name, ' ');
+                            builder.Append('(');
+                            builder.AppendWrap(fs.CanWrite ? "可写" : "不可写", ' ');
+                            builder.AppendWrap(fs.CanRead ? "可读" : "不可读", ' ');
+                            builder.AppendWrap(fs.CanSeek ? "可查找" : "不可查找", ' ');
+                            builder.AppendWrap(fs.CanTimeout ? "可超时" : "不可超时", ' ');
+                            builder.Append(')');
+                            builder.AppendLine();
+                            if (fs.SafeFileHandle.IsClosed)
+                            {
+                                builder.Append("已关闭").Append(' ');
+                            }
+                            else
+                            {
+                                builder.AppendKeyValuePair("当前位置", fs.Position, "=>", false).Append(' ');
+                                builder.AppendKeyValuePair("长度", fs.Length, "=>", false).Append(' ');
+                            }
+
+                            return builder.ToString();
+                        }
+                    case DealTypeEnum.IsOtherStream:
+                        {
+                            StringBuilder builder = new StringBuilder();
+                            builder.Append('[');
+                            builder.Append(obj.GetType().Name);
+                            builder.Append(']');
+                            builder.AppendLine();
+                            return _defaultToString(builder, info, obj, depth, objStack, true);
+                        }
                     case DealTypeEnum.Dictionary:
                         {
                             StringBuilder builder = new StringBuilder();
@@ -139,51 +175,7 @@ namespace Common_Util.Module
                             }
                         }
                     case DealTypeEnum.Other:
-                        if (info.Properties.Length == 0)
-                        {
-                            return obj.ToString() ?? obj.GetType().Name;
-                        }
-                        else
-                        {
-                            StringBuilder builder = new StringBuilder();
-                            StringBuilder indexParametersBuilder = new StringBuilder();
-
-                            string str;
-                            string tabStr;
-                            foreach (PropertyInfo propertyInfo in info.Properties)
-                            {
-                                var indexParameters = propertyInfo.GetIndexParameters();
-                                if (indexParameters.Length > 0)
-                                {
-                                    indexParametersBuilder.Clear();
-                                    for (int i = 0; i < indexParameters.Length; i++)
-                                    {
-                                        var param = indexParameters[i];
-                                        indexParametersBuilder.Append(param.ParameterType.Name).Append(' ').Append(param.Name);
-                                        if (i < indexParameters.Length - 1)
-                                        {
-                                            indexParametersBuilder.Append(", ");
-                                        }
-                                    }
-
-                                    str = $"索引器[{indexParametersBuilder}]";
-                                }
-                                else
-                                {
-                                    var value = propertyInfo.GetValue(obj, null);
-                                    str = _getFullInfo(value, depth + 1, objStack);
-                                }
-                                tabStr = "\n" + (" ".Repeat(propertyInfo.Name.Length + 1));
-                                str = str.Replace("\n", tabStr);
-                                builder.Append(propertyInfo.Name).Append(SPLIT_CHAR).AppendLine(str);
-                            }
-                            if (builder.Length > 0)
-                            {
-                                builder.Remove(builder.Length - 1, 1);
-                            }
-
-                            return builder.ToString();
-                        }
+                        return _defaultToString(new StringBuilder(), info, obj, depth, objStack, false);
                     default:
                         throw new NotSupportedException();
                 }
@@ -194,6 +186,74 @@ namespace Common_Util.Module
             }
         }
 
+        private string _defaultToString(StringBuilder builder, TypePropertyInfo info, object obj, int depth, Stack<object> objStack, bool getPropertyValueTryCatch)
+        {
+            if (info.Properties.Length == 0)
+            {
+                return obj.ToString() ?? obj.GetType().Name;
+            }
+            else
+            {
+                StringBuilder indexParametersBuilder = new StringBuilder();
+
+                string str;
+                string tabStr;
+                foreach (PropertyInfo propertyInfo in info.Properties)
+                {
+                    var indexParameters = propertyInfo.GetIndexParameters();
+                    if (indexParameters.Length > 0)
+                    {
+                        indexParametersBuilder.Clear();
+                        for (int i = 0; i < indexParameters.Length; i++)
+                        {
+                            var param = indexParameters[i];
+                            indexParametersBuilder.Append(param.ParameterType.Name).Append(' ').Append(param.Name);
+                            if (i < indexParameters.Length - 1)
+                            {
+                                indexParametersBuilder.Append(", ");
+                            }
+                        }
+
+                        str = $"索引器[{indexParametersBuilder}]";
+                    }
+                    else
+                    {
+                        object? value;
+                        bool toString = propertyInfo.ExistCustomAttribute<InfoToStringAttribute>();
+                        if (getPropertyValueTryCatch)
+                        {
+                            try
+                            {
+                                value = propertyInfo.GetValue(obj, null);
+                                str = toString ? 
+                                    (value == null ? NULL_STRING : (value.ToString() ?? string.Empty)) 
+                                    : _getFullInfo(value, depth + 1, objStack);
+                            }
+                            catch (Exception ex)
+                            {
+                                str = "取值异常:" + ex.Message;
+                            }
+                        }
+                        else
+                        {
+                            value = propertyInfo.GetValue(obj, null);
+                            str = toString ?
+                                (value == null ? NULL_STRING : (value.ToString() ?? string.Empty))
+                                : _getFullInfo(value, depth + 1, objStack);
+                        }
+                    }
+                    tabStr = "\n" + (" ".Repeat(propertyInfo.Name.Length + 1));
+                    str = str.Replace("\n", tabStr);
+                    builder.Append(propertyInfo.Name).Append(SPLIT_CHAR).AppendLine(str);
+                }
+                if (builder.Length > 0)
+                {
+                    builder.Remove(builder.Length - 1, 1);
+                }
+
+                return builder.ToString();
+            }
+        }
 
         class TypePropertyInfo
         {
@@ -209,9 +269,25 @@ namespace Common_Util.Module
                 {
                     DealType = DealTypeEnum.ToString;
                 }
+                else if (type.IsAssignableFrom(typeof(IStringConveying)))
+                {
+                    DealType = DealTypeEnum.ToString;
+                }
+                else if (type.ExistCustomAttribute<InfoToStringAttribute>())
+                {
+                    DealType = DealTypeEnum.ToString;
+                }
                 else if (type == typeof(string)) 
                 {
                     DealType = DealTypeEnum.IsString;
+                }
+                else if (type == typeof(FileStream))
+                {
+                    DealType = DealTypeEnum.IsFileStream;
+                }
+                else if (type.IsAssignableTo(typeof(Stream)))
+                {
+                    DealType = DealTypeEnum.IsOtherStream;
                 }
                 else if (type.IsAssignableTo(typeof(IDictionary)))
                 {
@@ -244,11 +320,19 @@ namespace Common_Util.Module
         }
         enum DealTypeEnum
         {
+            // 可以直接 ToString 的类型, 比如值, 枚举, 日期
             ToString,
+            
+            // 特定类型
             IsString,
+            IsFileStream,
+            IsOtherStream,
+
+            // 集合
             List,
             Array,
             Dictionary,
+
             Other,
         }
     }

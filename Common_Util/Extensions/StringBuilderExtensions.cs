@@ -112,5 +112,62 @@ namespace Common_Util.Extensions
 
             return builder;
         }
+
+
+
+        /// <summary>
+        /// 往 StringBuilder 后追加一个东西, 并用输入的一左一右一对字符串包裹起来
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="sth">追加的东西</param>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns>返回传入的 StringBuilder</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static StringBuilder AppendWrap(this StringBuilder builder, object? sth, string left, string right)
+        {
+            builder.Append(left).Append(sth).Append(right);
+            return builder;
+        }
+        /// <summary>
+        /// 往 StringBuilder 后追加一个东西, 并用输入的一左一右一对字符串包裹起来
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="sth">追加的东西</param>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns>返回传入的 StringBuilder</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static StringBuilder AppendWrap(this StringBuilder builder, object? sth, char left, char right)
+        {
+            builder.Append(left).Append(sth).Append(right);
+            return builder;
+        }
+        /// <summary>
+        /// 往 StringBuilder 后追加一个东西, 并用输入的字符串包裹起来
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="sth"></param>
+        /// <param name="wrapper"></param>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static StringBuilder AppendWrap(this StringBuilder builder, object? sth, string wrapper)
+        {
+            builder.Append(wrapper).Append(sth).Append(wrapper);
+            return builder;
+        }
+        /// <summary>
+        /// 往 StringBuilder 后追加一个东西, 并用输入的字符串包裹起来
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="sth"></param>
+        /// <param name="wrapper"></param>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static StringBuilder AppendWrap(this StringBuilder builder, object? sth, char wrapper)
+        {
+            builder.Append(wrapper).Append(sth).Append(wrapper);
+            return builder;
+        }
     }
 }
