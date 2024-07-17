@@ -52,6 +52,7 @@ namespace Common_Util.Module
 
             switch (info.DealType)
             {
+                case DealTypeEnum.Other:
                 case DealTypeEnum.ToString:
                     return obj.ToString() ?? string.Empty;
                 case DealTypeEnum.IsString:
