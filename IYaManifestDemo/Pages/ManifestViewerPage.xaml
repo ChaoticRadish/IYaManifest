@@ -6,17 +6,431 @@
       xmlns:local="clr-namespace:IYaManifestDemo.Pages"
       xmlns:commonFG="clr-namespace:Common_Wpf.Controls.FeatureGroup;assembly=Common_Wpf"
       xmlns:layouts="clr-namespace:Common_Wpf.Controls.LayoutPanel;assembly=Common_Wpf"
+      xmlns:converter="clr-namespace:Common_Wpf.Converter;assembly=Common_Wpf"
+      xmlns:viewModel="clr-namespace:IYaManifestDemo.ViewModel"
+      xmlns:coreEnum="clr-namespace:IYaManifest.Enums;assembly=IYaManifest"
+      xmlns:coreBase="clr-namespace:IYaManifest.Core.Base;assembly=IYaManifest"
+      xmlns:coreInterfaces="clr-namespace:IYaManifest.Interfaces;assembly=IYaManifest"
+      xmlns:demoAssets="clr-namespace:IYaManifestDemo.Assets"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="ManifestViewerPage">
+      Title="ManifestViewerPage"
+      d:DataContext="{d:DesignInstance viewModel:ManifestViewerPageViewModel}">
+
+    <Page.Resources>
+        <converter:IsNullConverter x:Key="isNullConverter"/>
+        <converter:GetTypeConverter x:Key="getTypeConverter"/>
+        <converter:BriefStringInfoConverter x:Key="briefStringInfoConverter"/>
+        <converter:FullStringInfoConverter x:Key="fullStringInfoConverter"/>
+        <converter:BoolToVisibilityConverter x:Key="boolToVisibilityConverter"/>
+        <converter:ByteArrayToHexStringConverter x:Key="byteArrayToHexStringConverter"/>
+        <converter:IsAssignableToConverter x:Key="isAssignableToConverter"/>
+
+        <Style x:Key="OperationHeadArea" TargetType="ContentControl">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ContentControl">
+                        <StackPanel>
+                            <Separator Margin="0"/>
+                            <ContentPresenter Content="{TemplateBinding Content}"/>
+                            <Separator Margin="0"/>
+                        </StackPanel>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="HeadButton" TargetType="Button">
+            <Setter Property="Margin" Value="2"/>
+            <Setter Property="Padding" Value="4, 2"/>
+        </Style>
+        <Style x:Key="HeadTextBox" TargetType="TextBox">
+            <Setter Property="Margin" Value="2"/>
+            <Setter Property="Width" Value="300"/>
+        </Style>
+
+        <Style x:Key="TitleLabel" TargetType="Label">
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Label">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" Margin="4, 2">
+                            <Separator/>
+                            <Label Content="{TemplateBinding Content}" Padding="8, 4, 64, 4"/>
+                            <Separator/>
+                        </StackPanel>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SubTitleLabel" TargetType="Label">
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Label">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" Margin="4, 1">
+                            <Separator/>
+                            <Label Content="{TemplateBinding Content}" Padding="8, 0, 32, 0"/>
+                            <Separator/>
+                        </StackPanel>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
+        <Style x:Key="ItemList" TargetType="ListBox">
+            <Setter Property="Margin" Value="4, 2"></Setter>
+            <Setter Property="MinHeight" Value="80"></Setter>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        </Style>
+
+        <Style x:Key="KeyValueLine" TargetType="StackPanel">
+            <Setter Property="Orientation" Value="Horizontal"></Setter>
+        </Style>
+        <Style x:Key="LineKey" TargetType="Label">
+            <Setter Property="FontWeight" Value="Bold"></Setter>
+            <Setter Property="MinWidth" Value="80"></Setter>
+            <Setter Property="VerticalAlignment" Value="Top"></Setter>
+        </Style>
+
+        <Style x:Key="ListItemArea" TargetType="ContentControl">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ContentControl">
+                        <StackPanel>
+                            <Separator Margin="0"/>
+                            <ContentPresenter Content="{TemplateBinding Content}"/>
+                            <Separator Margin="0"/>
+                        </StackPanel>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="DetailButton" TargetType="Button">
+            <Setter Property="Margin" Value="2"/>
+            <Setter Property="Padding" Value="4, 2"/>
+        </Style>
+        <Style x:Key="LoadButton" TargetType="Button">
+            <Setter Property="Margin" Value="2"/>
+            <Setter Property="Padding" Value="4, 2"/>
+        </Style>
+
+        <Style x:Key="AssetShower" TargetType="ContentControl">
+            <Setter Property="Content">
+                <Setter.Value>
+                    <Label Content="{Binding Converter={StaticResource fullStringInfoConverter}}"></Label>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <DataTrigger Value="True">
+                    <DataTrigger.Binding>
+                        <MultiBinding Converter="{StaticResource isAssignableToConverter}">
+                            <Binding/>
+                            <Binding Source="{x:Type demoAssets:ITestTextAsset}"/>
+                        </MultiBinding>
+                    </DataTrigger.Binding>
+                    <Setter Property="Content">
+                        <Setter.Value>
+                            <Label Content="{Binding Data}"></Label>
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Converter={StaticResource getTypeConverter}}" Value="{x:Type demoAssets:ImageAsset}">
+                    <Setter Property="Content">
+                        <Setter.Value>
+                            <Image Source="{Binding Image}"></Image>
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
+            </Style.Triggers>
+            
+            
+        </Style>
+
+    </Page.Resources>
 
     <layouts:RetractableContainer RetractableAreaLocation="Right"
                                   RetractableAreaWidth="250">
         <layouts:RetractableContainer.RetractableAreaContent>
             <ContentControl>
-                <commonFG:SimpleLogShower></commonFG:SimpleLogShower>
+                <commonFG:SimpleLogShower x:Name="LogShower"></commonFG:SimpleLogShower>
             </ContentControl>
         </layouts:RetractableContainer.RetractableAreaContent>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <ContentControl Grid.Row="0" Style="{StaticResource OperationHeadArea}">
+                <StackPanel Orientation="Horizontal">
+                    <Button Style="{StaticResource HeadButton}" Content="选择文件" Command="{Binding SelectFileCommand}"></Button>
+                    <TextBox Style="{StaticResource HeadTextBox}" IsReadOnly="True" Text="{Binding FileName, Mode=OneWay}"/>
+                    <Button Style="{StaticResource HeadButton}" Content="读取数据" Command="{Binding ReadFileCommand}"></Button>
+                </StackPanel>
+            </ContentControl>
+
+            <ScrollViewer Grid.Row="1">
+                <StackPanel Orientation="Vertical">
+                    <Label Style="{StaticResource TitleLabel}">文件头</Label>
+
+                    <ContentControl DataContext="{Binding FileHead}">
+                        <ContentControl.Style>
+                            <Style TargetType="ContentControl">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Converter={StaticResource isNullConverter}}" Value="True">
+                                        <Setter Property="Content">
+                                            <Setter.Value>
+                                                <Label>- - - -</Label>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Converter={StaticResource isNullConverter}}" Value="False">
+                                        <Setter Property="Content">
+                                            <Setter.Value>
+                                                <Label Content="{Binding Converter={StaticResource fullStringInfoConverter}}"></Label>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ContentControl.Style>
+                    </ContentControl>
+
+                    <Separator/>
+
+                    <Label Style="{StaticResource TitleLabel}">清单头</Label>
+
+                    <ContentControl DataContext="{Binding ManifestHead}">
+                        <ContentControl.Style>
+                            <Style TargetType="ContentControl">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Converter={StaticResource isNullConverter}}" Value="True">
+                                        <Setter Property="Content">
+                                            <Setter.Value>
+                                                <Label>- - - -</Label>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Converter={StaticResource isNullConverter}}" Value="False">
+                                        <Setter Property="Content">
+                                            <Setter.Value>
+                                                <Label Content="{Binding Converter={StaticResource fullStringInfoConverter}}"></Label>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ContentControl.Style>
+                    </ContentControl>
+
+                    <Label Style="{StaticResource TitleLabel}">清单项</Label>
+                    <ListBox ItemsSource="{Binding ManifestItems}" Style="{StaticResource ItemList}" d:ItemsSource="{d:SampleData ItemCount=10}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <ContentControl Style="{StaticResource ListItemArea}">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <StackPanel Grid.Column="0">
+                                            <StackPanel Style="{StaticResource KeyValueLine}">
+                                                <Label Style="{StaticResource LineKey}">资源ID</Label>
+                                                <Label Content="{Binding AssetId}"></Label>
+                                            </StackPanel>
+
+                                            <StackPanel Style="{StaticResource KeyValueLine}">
+                                                <Label Style="{StaticResource LineKey}">简述</Label>
+                                                <Label Content="{Binding Brief}"></Label>
+                                            </StackPanel>
+
+                                            <StackPanel Style="{StaticResource KeyValueLine}">
+                                                <Label Style="{StaticResource LineKey}">资源引用类型</Label>
+                                                <Label Content="{Binding AssetReference, Converter={StaticResource getTypeConverter}}"></Label>
+                                            </StackPanel>
+
+                                            
+                                        </StackPanel>
+                                        <Button Grid.Column="1" Style="{StaticResource DetailButton}" 
+                                                Command="{Binding DataContext.ItemDetailCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBox}}}"
+                                                CommandParameter="{Binding}">详情</Button>
+
+                                    </Grid>
+                                </ContentControl>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+                    <StackPanel Orientation="Vertical" Visibility="{Binding HasSelected, Converter={StaticResource boolToVisibilityConverter}}">
+                        <Label Style="{StaticResource TitleLabel}">清单项详情</Label>
+                        <Label Style="{StaticResource SubTitleLabel}">清单项信息</Label>
+                        <StackPanel Orientation="Vertical" DataContext="{Binding SelectedItem}">
+
+                            <StackPanel Style="{StaticResource KeyValueLine}">
+                                <Label Style="{StaticResource LineKey}">资源ID</Label>
+                                <Label Content="{Binding AssetId}"></Label>
+                            </StackPanel>
+
+                            <StackPanel Style="{StaticResource KeyValueLine}">
+                                <Label Style="{StaticResource LineKey}">资源类型</Label>
+                                <Label Content="{Binding AssetType}"></Label>
+                            </StackPanel>
+
+                            <StackPanel Style="{StaticResource KeyValueLine}">
+                                <Label Style="{StaticResource LineKey}">存储方式</Label>
+                                <Label Content="{Binding StorageMode}"></Label>
+                            </StackPanel>
+
+                            <StackPanel Style="{StaticResource KeyValueLine}">
+                                <Label Style="{StaticResource LineKey}">MD5</Label>
+                                <Label Content="{Binding MD5, Converter={StaticResource byteArrayToHexStringConverter}}"></Label>
+                            </StackPanel>
+
+                            <ContentControl>
+                                <ContentControl.Style>
+                                    <Style TargetType="ContentControl">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding StorageMode}" Value="ManifestData">
+                                                <Setter Property="Content">
+                                                    <Setter.Value>
+                                                        <StackPanel Orientation="Vertical">
+                                                            <StackPanel Style="{StaticResource KeyValueLine}">
+                                                                <Label Style="{StaticResource LineKey}">数据起点</Label>
+                                                                <Label Content="{Binding LocationStart}"></Label>
+                                                            </StackPanel>
+                                                            <StackPanel Style="{StaticResource KeyValueLine}">
+                                                                <Label Style="{StaticResource LineKey}">数据长度</Label>
+                                                                <Label Content="{Binding LocationLength}"></Label>
+                                                            </StackPanel>
+                                                        </StackPanel>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding StorageMode}" Value="Outside">
+                                                <Setter Property="Content">
+                                                    <Setter.Value>
+                                                        <StackPanel Orientation="Vertical">
+                                                            <StackPanel Style="{StaticResource KeyValueLine}">
+                                                                <Label Style="{StaticResource LineKey}">相对路径</Label>
+                                                                <Label Content="{Binding OutsidePath}"></Label>
+                                                            </StackPanel>
+                                                        </StackPanel>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ContentControl.Style>
+
+                            </ContentControl>
+
+
+                            <StackPanel Style="{StaticResource KeyValueLine}">
+                                <Label Style="{StaticResource LineKey}">备注</Label>
+                                <Label Content="{Binding Remark}"></Label>
+                            </StackPanel>
+
+                        </StackPanel>
+
+
+                        <ContentControl>
+                            <ContentControl.Style>
+                                <Style TargetType="ContentControl">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding SelectedItem.AssetReference, Converter={StaticResource isNullConverter}}" Value="True">
+                                            <Setter Property="Content">
+                                                <Setter.Value>
+                                                    <Label>资源引用为空! </Label>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </DataTrigger>
+                                        <DataTrigger Value="True">
+                                            <DataTrigger.Binding>
+                                                <MultiBinding Converter="{StaticResource isAssignableToConverter}">
+                                                    <Binding Path="SelectedItem.AssetReference"/>
+                                                    <Binding Source="{x:Type coreInterfaces:ILazyAsset}"/>
+                                                </MultiBinding>
+                                            </DataTrigger.Binding>
+                                            <Setter Property="Content">
+                                                <Setter.Value>
+                                                    <StackPanel Orientation="Vertical">
+                                                        <Label Style="{StaticResource SubTitleLabel}">
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <TextBlock Text="懒加载资源"></TextBlock>
+                                                                <TextBlock Text=" - "></TextBlock>
+                                                                <TextBlock Text="{Binding LazyAsset.ExpectReferenceType}"></TextBlock>
+                                                            </StackPanel>
+                                                        </Label>
+
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <StackPanel Style="{StaticResource KeyValueLine}">
+                                                                <Label Style="{StaticResource LineKey}">已加载</Label>
+                                                                <Label Content="{Binding LazyAssetLoaded}"></Label>
+                                                            </StackPanel>
+
+                                                            <Button Style="{StaticResource LoadButton}" Command="{Binding LazyAssetLoadCommand}">加载</Button>
+                                                            <Button Style="{StaticResource LoadButton}" Command="{Binding LazyAssetUnloadCommand}">卸载</Button>
+                                                            
+                                                        </StackPanel>
+
+                                                        <StackPanel Orientation="Vertical" Visibility="{Binding LazyAssetLoaded, Converter={StaticResource boolToVisibilityConverter}}">
+                                                            <Separator/>
+                                                            <ContentControl Style="{StaticResource AssetShower}" DataContext="{Binding LazyAssetWrappingAsset}"></ContentControl>
+                                                            <Separator/>
+                                                        </StackPanel>
+
+                                                    </StackPanel>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </DataTrigger>
+
+                                        <DataTrigger Value="False">
+                                            <DataTrigger.Binding>
+                                                <MultiBinding Converter="{StaticResource isAssignableToConverter}">
+                                                    <Binding Path="SelectedItem.AssetReference"/>
+                                                    <Binding Source="{x:Type coreInterfaces:ILazyAsset}"/>
+                                                </MultiBinding>
+                                            </DataTrigger.Binding>
+                                            <Setter Property="Content">
+                                                <Setter.Value>
+                                                    <StackPanel Orientation="Vertical">
+                                                        <Label Style="{StaticResource SubTitleLabel}">
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <TextBlock Text="一般资源"></TextBlock>
+                                                                <TextBlock Text=" - "></TextBlock>
+                                                                <TextBlock Text="{Binding SelectedItem.AssetReference, Converter={StaticResource getTypeConverter}}"></TextBlock>
+                                                            </StackPanel>
+                                                        </Label>
+
+                                                        <StackPanel Orientation="Vertical">
+                                                            <Separator/>
+                                                            <ContentControl Style="{StaticResource AssetShower}" DataContext="{Binding SelectedItem.AssetReference}"></ContentControl>
+                                                            <Separator/>
+                                                        </StackPanel>
+                                                    </StackPanel>
+
+                                                </Setter.Value>
+                                            </Setter>
+                                        </DataTrigger>
+
+                                    </Style.Triggers>
+                                </Style>
+                            </ContentControl.Style>
+
+                        </ContentControl>
+
+                    </StackPanel>
+
+                </StackPanel>
+            </ScrollViewer>
+            
+        </Grid>
         
         
     </layouts:RetractableContainer>
