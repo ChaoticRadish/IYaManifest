@@ -161,6 +161,24 @@ namespace Common_Util.Extensions
             return returnBytes;
         }
 
+        #region
+        /// <summary>
+        /// 过滤 null 值
+        /// </summary>
+        /// <param name="strs"></param>
+        /// <returns></returns>
+        public static IEnumerable<string> FilterNull(this IEnumerable<string?> strs)
+        {
+            foreach (string? str in strs)
+            {
+                if (str != null)
+                {
+                    yield return str;
+                }
+            }
+        }
+        #endregion
+
         #region IP地址判断
         /// <summary>
         /// 检查是否 IPv4 的正则表达式

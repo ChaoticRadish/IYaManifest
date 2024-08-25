@@ -9,11 +9,11 @@ using System.Text;
 namespace Common_Util.Data.Structure.Tree
 {
     /// <summary>
-    /// 通用树结构
+    /// 通用树结构 (不定叉数的多叉树)
     /// </summary>
     /// <typeparam name="Scope">作用域</typeparam>
     /// <typeparam name="Value"></typeparam>
-    public class GeneralTree<Scope, Value>
+    public class GeneralTree<Scope, Value> : IMultiTree<Value?>
     {
         #region 比较方法
         /// <summary>
@@ -45,6 +45,10 @@ namespace Common_Util.Data.Structure.Tree
         /// 根节点
         /// </summary>
         public GeneralTreeNode<Scope?, Value?>? Root { get; set; }
+
+        IMultiTreeNode<Value?>? IMultiTree<Value?>.Root => Root;
+
+
 
         #region 基于层信息建树
         /// <summary>
@@ -236,7 +240,7 @@ namespace Common_Util.Data.Structure.Tree
             Dictionary<int, List<KeyValuePair<T?, GeneralTreeNode<Scope?, Value?>>>> layers
                 = new Dictionary<int, List<KeyValuePair<T?, GeneralTreeNode<Scope?, Value?>>>>();
             // 根
-            GeneralTreeNode<Scope?, Value?> root = new GeneralTreeNode<Scope?, Value?>();
+            GeneralTreeNode<Scope?, Value?> root = rootObj == null ? new GeneralTreeNode<Scope?, Value?>() : new(convertFunc(rootObj));
             layers.Add(0, new List<KeyValuePair<T?, GeneralTreeNode<Scope?, Value?>>>()
                             { 
                                 new KeyValuePair<T?, GeneralTreeNode<Scope?, Value?>>(rootObj, root)
@@ -716,7 +720,7 @@ namespace Common_Util.Data.Structure.Tree
     /// </summary>
     /// <typeparam name="Scope"></typeparam>
     /// <typeparam name="Value"></typeparam>
-    public class GeneralTreeNode<Scope, Value>
+    public class GeneralTreeNode<Scope, Value> : IMultiTreeNode<Value?>
     {
         /// <summary>
         /// 作用域实现 <see cref="Data.Property.IScope"/> 接口
@@ -783,8 +787,10 @@ namespace Common_Util.Data.Structure.Tree
         /// <summary>
         /// 子节点
         /// </summary>
-        public List<GeneralTreeNode<Scope?, Value?>> Childrens { get; private set; }
-            = new List<GeneralTreeNode<Scope?, Value?>>();
+        public List<GeneralTreeNode<Scope?, Value?>> Childrens { get => _childrens; private set => _childrens = value; }
+        private List<GeneralTreeNode<Scope?, Value?>> _childrens = [];
+
+        IEnumerable<IMultiTreeNode<Value?>> IMultiTreeNode<Value?>.Childrens => _childrens;
 
 
 

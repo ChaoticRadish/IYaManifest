@@ -132,6 +132,22 @@ namespace Common_Wpf.Controls.FeatureGroup
         #region 配置
 
 
+        /// <summary>
+        /// 文本是否自动换行
+        /// </summary>
+        public TextWrapping TextWrapping
+        {
+            get { return (TextWrapping)GetValue(TextWrappingProperty); }
+            set { SetValue(TextWrappingProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for TextWrapping.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty TextWrappingProperty =
+            DependencyProperty.Register("TextWrapping", typeof(TextWrapping), typeof(SimpleLogShower), new PropertyMetadata(TextWrapping.NoWrap));
+
+
+
+
         public BaseBoxSettingCollection LevelSetting
         {
             get { return (BaseBoxSettingCollection)GetValue(LevelSettingProperty); }
@@ -239,6 +255,23 @@ namespace Common_Wpf.Controls.FeatureGroup
 
 
 
+        #endregion
+
+        #region UI 数据
+        private double itemContainerWidth = double.PositiveInfinity;
+        public double ItemContainerWidth
+        {
+            get => itemContainerWidth;
+            set
+            {
+                itemContainerWidth = value;
+                if (double.IsNaN(itemContainerWidth))
+                {
+                    itemContainerWidth = double.PositiveInfinity;
+                }
+                OnPropertyChanged();
+            }
+        } 
         #endregion
     }
 

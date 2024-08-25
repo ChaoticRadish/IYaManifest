@@ -101,6 +101,14 @@ namespace Common_Util.Data.Struct
                 FailureReason = "发生异常: " + ex.Message,
             };
         }
+        /// <summary>
+        /// 由子操作产生的失败
+        /// </summary>
+        /// <param name="child"></param>
+        /// <param name="childDesc">对子操作的描述, 比如大概是做什么的子操作, 这个方法会加上冒号 ": "</param>
+        /// <returns></returns>
+        public static OperationResultEx Failure(IOperationResult child, string? childDesc = null)
+            => OperationResultHelper.FailureEx<OperationResultEx>(child, childDesc);
 
 
         #endregion

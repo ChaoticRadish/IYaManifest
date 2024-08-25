@@ -27,19 +27,37 @@
                              VerticalContentAlignment="Center"
                              VirtualizingPanel.VirtualizationMode="Standard"
                              VirtualizingPanel.IsVirtualizing="True">
+
+                        
+                        <ListBox.Resources>
+                            <sys:Double x:Key="ItemWidth"></sys:Double>
+                        </ListBox.Resources>
+
+                        
                         <ListBox.Style>
                             <Style TargetType="ListBox">
+                                <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"></Setter>
+                                
                                 <Style.Triggers>
+                                    <DataTrigger Binding="{Binding TextWrapping, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:SimpleLogShower}}}" Value="Wrap">
+
+                                        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"></Setter>
+                                    </DataTrigger>
+                                    
                                     <DataTrigger Binding="{Binding LogItemTemplate, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource isNullConverter}}" Value="True">
                                         <Setter Property="ItemTemplate">
                                             <Setter.Value>
                                                 <DataTemplate>
-                                                    <Label HorizontalAlignment="Stretch">
+                                                    <Label HorizontalAlignment="Stretch" MaxWidth="{Binding ItemContainerWidth, Mode=OneWay, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:SimpleLogShower}}}">
                                                         <Label.Content>
-                                                            <MultiBinding Converter="{StaticResource logDataConverter}">
-                                                                <Binding/>
-                                                                <Binding Path="DefaultTemplateLogStringConfig" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type local:SimpleLogShower}}"/>
-                                                            </MultiBinding>
+                                                            <TextBlock TextWrapping="{Binding TextWrapping, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:SimpleLogShower}}}">
+                                                                <TextBlock.Text>
+                                                                    <MultiBinding Converter="{StaticResource logDataConverter}">
+                                                                        <Binding/>
+                                                                        <Binding Path="DefaultTemplateLogStringConfig" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type local:SimpleLogShower}}"/>
+                                                                    </MultiBinding>
+                                                                </TextBlock.Text>
+                                                            </TextBlock>
                                                         </Label.Content>
                                                         
                                                         <Label.Background>
@@ -83,7 +101,7 @@
 
                         <ListBox.ItemContainerStyle>
                             <Style TargetType="ListBoxItem">
-                                <Setter Property="HorizontalContentAlignment" Value="Left"></Setter>
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
                                 <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
                             </Style>
                         </ListBox.ItemContainerStyle>

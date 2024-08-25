@@ -13,11 +13,31 @@ namespace Common_Util.Module.Command
     /// </summary>
     public class SampleCommand : ICommand
     {
-        private readonly Action<object?> execAction;
-        private readonly Func<object?, bool> changeFunc;
+        private readonly bool ignoreParamWhenExec;
+        private readonly Action? execAction_noParam;
+        private readonly Action<object?>? execAction;
+        private readonly Func<object?, bool>? changeFunc;
 
-        public SampleCommand(Action<object?> execAction, Func<object?, bool> changeFunc)
+        /// <summary>
+        /// 实例化命令, 执行命令时不需要使用传入参数.
+        /// </summary>
+        /// <param name="execAction"></param>
+        /// <param name="changeFunc">如果该参数为 null, 则无论传入什么参数, <see cref="CanExecute"/> 都将返回 true </param>
+        public SampleCommand(Action execAction, Func<object?, bool>? changeFunc = null)
         {
+            ignoreParamWhenExec = true;
+            execAction_noParam = execAction;
+            this.changeFunc = changeFunc;
+        }
+
+        /// <summary>
+        /// 实例化命令
+        /// </summary>
+        /// <param name="execAction"></param>
+        /// <param name="changeFunc">如果该参数为 null, 则无论传入什么参数, <see cref="CanExecute"/> 都将返回 true </param>
+        public SampleCommand(Action<object?> execAction, Func<object?, bool>? changeFunc = null)
+        {
+            ignoreParamWhenExec = false;
             this.execAction = execAction;
             this.changeFunc = changeFunc;
         }
@@ -26,12 +46,20 @@ namespace Common_Util.Module.Command
 
         public bool CanExecute(object? parameter)
         {
+            if (this.changeFunc == null) return true;
             return this.changeFunc.Invoke(parameter);
         }
 
         public void Execute(object? parameter)
         {
-            this.execAction.Invoke(parameter);
+            if (ignoreParamWhenExec)
+            {
+                this.execAction_noParam!.Invoke();
+            }
+            else
+            {
+                this.execAction!.Invoke(parameter);
+            }
         }
     }
 }

@@ -9,15 +9,17 @@ using System.Windows;
 
 namespace Common_Wpf.Converter
 {
-    [ValueConversion(typeof(bool), typeof(Visibility))]
-    public class BoolToVisibilityConverter : IValueConverter
+    /// <summary>
+    /// 根据一个对象是否为 null, 转换为不可见状态: <see cref="Visibility.Collapsed"/> 或 <see cref="Visibility.Hidden"/>
+    /// </summary>
+    public class NullToVisibilityConverter : IValueConverter
     {
-        public BoolToVisibilityConverter()
+        public NullToVisibilityConverter()
             : this(true)
         {
 
         }
-        public BoolToVisibilityConverter(bool collapsewhenInvisible)
+        public NullToVisibilityConverter(bool collapsewhenInvisible)
             : base()
         {
             CollapseWhenInvisible = collapsewhenInvisible;
@@ -27,10 +29,12 @@ namespace Common_Wpf.Converter
         /// </summary>
         public bool CollapseWhenInvisible { get; set; }
 
+
+
         /// <summary>
-        /// false 时使用的 <see cref="Visibility"/> 值
+        /// null 时使用的 <see cref="Visibility"/> 值
         /// </summary>
-        public Visibility FalseVisibility
+        public Visibility NullVisibility
         {
             get
             {
@@ -45,18 +49,16 @@ namespace Common_Wpf.Converter
             }
 
         }
+
+
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value == null)
-                return Visibility.Visible;
-            return (bool)value ? Visibility.Visible : FalseVisibility;
+            return value == null ? NullVisibility : Visibility.Visible;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value == null)
-                return true;
-            return ((Visibility)value == Visibility.Visible);
+            throw new NotImplementedException();
         }
     }
 }

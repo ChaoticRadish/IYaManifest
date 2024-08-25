@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,6 +25,31 @@ namespace Common_Util.Extensions
             if (list.Count == 0) throw new ArgumentException("列表中不包含任何元素", nameof(list));
             random ??= new System.Random();
             return list[random.Next(list.Count)];
+        }
+
+        /// <summary>
+        /// 尝试从列表中随机取其中一项
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list"></param>
+        /// <param name="item">被随机获取到的项</param>
+        /// <param name="exclude">随机取值时, 需要排除的值</param>
+        /// <param name="comparer">排除值时, 比较两值是否等价的比较器</param>
+        /// <param name="random">随机数生成器, 用于生成随机的索引</param>
+        /// <returns>获取成功时, 将返回 true</returns>
+        public static bool TryGetRandom<T>(this IList<T> list, out T item, IEnumerable<T>? exclude = null, IEqualityComparer<T>? comparer = null, System.Random? random = null)
+        {
+            IList<T> range = exclude == null ? list : list.Except(exclude, comparer).ToArray();
+            if (range.Count == 0)
+            {
+                item = default!;    // 这里标记了 '!', 但是实际可能是 null 的, 如 T is string? 时
+                return false;
+            }
+            else
+            {
+                item = range.Random(random);
+                return true;
+            }
         }
 
         /// <summary>
@@ -92,6 +118,24 @@ namespace Common_Util.Extensions
         {
             list.Add(item); return list;
         }
+
+        /// <summary>
+        /// 创建一定数量的新项, 追加到列表尾部
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list"></param>
+        /// <param name="count"></param>
+        /// <param name="getObjFunc">创建新项的方法, 传入计数索引</param>
+        /// <returns></returns>
+        public static IList<T> Append<T>(this IList<T> list, int count, Func<int, T> getObjFunc)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                list.Append(getObjFunc(i));
+            }
+            return list;
+        }
+
         /// <summary>
         /// 将新项添加到列表顶部
         /// </summary>

@@ -28,7 +28,20 @@ namespace Common_Wpf.Converter
 
         private object? convert(object value, Type targetType)
         {
-            if (targetType.IsAssignableTo(typeof(IEnumerable)))
+            if (targetType == null) return null;
+
+            if (targetType == typeof(string))
+            {
+                if (value is byte b)
+                {
+                    return bs2Str([b]);
+                }
+                else if (value is byte[] bs)
+                {
+                    return bs2Str(bs);
+                }
+            }
+            else if (targetType.IsAssignableTo(typeof(IEnumerable)))
             {
                 List<byte>? bs = null;
                 if (value is string s)
@@ -46,22 +59,11 @@ namespace Common_Wpf.Converter
                 }
                 else if (targetType == typeof(byte[]))
                 {
-                    return bs;
+                    return bs.ToArray();
                 }
                 else if (targetType == typeof(IList<byte>))
                 {
                     return bs;
-                }
-            }
-            else if (targetType == typeof(string))
-            {
-                if (value is byte b)
-                {
-                    return bs2Str([b]);
-                }
-                else if (value is byte[] bs)
-                {
-                    return bs2Str(bs);
                 }
             }
             // 这种情况下, 使用输入参数返回默认对应类型

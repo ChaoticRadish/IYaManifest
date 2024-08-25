@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Common_Util.Interfaces.Owner;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,6 +16,7 @@ namespace Common_Util.Data.Structure.Map
     public class TagsMap<Key, Value> : Dictionary<Key, TagsMapItem<Key, Value>>
         where Key : notnull
     {
+
 
         #region 控制
         /// <summary>
@@ -174,7 +177,9 @@ namespace Common_Util.Data.Structure.Map
             }
             return output;
         }
+
         #endregion
+
     }
 
     /// <summary>
@@ -182,7 +187,7 @@ namespace Common_Util.Data.Structure.Map
     /// </summary>
     /// <typeparam name="TKey"></typeparam>
     /// <typeparam name="TValue"></typeparam>
-    public class TagsMapItem<TKey, TValue>
+    public class TagsMapItem<TKey, TValue> : ITagsOwner
         where TKey : notnull
     {
         public TagsMapItem()
@@ -204,5 +209,7 @@ namespace Common_Util.Data.Structure.Map
         /// 标签
         /// </summary>
         public string[] Tags { get; set; }
+
+        IEnumerable<string?> ITagsOwner.Tags => Tags;
     }
 }
