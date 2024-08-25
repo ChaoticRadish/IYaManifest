@@ -12,8 +12,12 @@
         Title="璃亚资源清单库 Demo" Height="800" Width="1200">
     <layouts:LeftMenuPageSwitcher>
         <layouts:LeftMenuPageSwitcher.Pages>
-            <commonVM:PageSwictherItemWithPageType Id="1" Name="清单查看" Brief="读取及查看资源详情"
+            <commonVM:PageSwictherItemWithPageType Id="1" Name="清单查看" Brief="读取 V1 版本清单文件及查看资源详情"
                                                    PageType="{x:Type pages:ManifestViewerPage}"/>
+            <commonVM:PageSwictherItemWithPageType Id="2" Name="清单创建" Brief="创建 V1 版本的清单文件"
+                                                   PageType="{x:Type pages:ManifestCreatorPage}"/>
+            <commonVM:PageSwictherItemWithPageType Id="10" Name="运行日志" Brief="Globals.DefaultLogger"
+                                                   PageType="{x:Type pages:DefaultLogPage}"/>
             <commonVM:PageSwictherItemWithPageType Id="100" Name="测试" Brief="开发过程中的一些小测试"
                                                    DebugVisible="True" ReleaseVisible="False"
                                                    PageType="{x:Type testPages:TestMainPage}"/>

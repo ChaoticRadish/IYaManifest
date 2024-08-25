@@ -44,6 +44,8 @@
                                                        PageType="{x:Type local:TestManifestFile001}"/>
                 <commonVM:PageSwictherItemWithPageType Id="3" Name="清单文件002" Brief="读写清单文件的一些测试 V1实现"
                                                        PageType="{x:Type local:TestManifestFile002}"/>
+                <commonVM:PageSwictherItemWithPageType Id="4" Name="加载 DLL 001" Brief="加载 DLL 中的映射配置"
+                                                       PageType="{x:Type local:TestLoadDll001}"/>
             </layouts:LeftMenuPageSwitcher.Pages>
 
             <layouts:LeftMenuPageSwitcher.CustomPageContainerTemplate>

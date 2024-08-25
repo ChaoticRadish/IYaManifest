@@ -69,7 +69,21 @@ namespace IYaManifest.Core.V1
         }
         protected virtual Task<IOperationResult<Manifest>> readAsyncImpl()
         {
-            OperationResult<Manifest> result = _readImpl1();
+            OperationResult<Manifest> result;
+            try
+            {
+                result = _readImpl1();
+                if (result.IsFailure)
+                {
+                    AssetLoadModeSelector.ManifestReadFailure(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                result = $"发生未处理异常! {ex.Message}";
+                AssetLoadModeSelector.ManifestReadFailure(result);
+                throw;
+            }
             return Task.FromResult<IOperationResult<Manifest>>(result);
         }
 
@@ -199,14 +213,20 @@ namespace IYaManifest.Core.V1
                         }
                     }
 
-                    AssetLoadModeSelector.Handle(item, assetDataStream, dataLength);
-
-
-                    assetDataStream.Dispose();
-                    if (itemDataTempFile != null)
+                    try
                     {
-                        itemDataTempFile.Value.Dispose();
+                        AssetLoadModeSelector.Handle(item, assetDataStream, dataLength);
                     }
+                    finally
+                    {
+                        assetDataStream.Dispose();
+                        if (itemDataTempFile != null)
+                        {
+                            itemDataTempFile.Value.Dispose();
+                        }
+                    }
+
+
 
                     items.Add(item);
                 }

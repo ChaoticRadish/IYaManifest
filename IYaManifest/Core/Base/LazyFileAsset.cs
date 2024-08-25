@@ -11,9 +11,19 @@ using System.Threading.Tasks;
 namespace IYaManifest.Core.Base
 {
     /// <summary>
+    /// 接口: 数据存储在文件中的懒加载资源
+    /// </summary>
+    public interface ILazyFileAsset : IAsset, ILazyAsset
+    {
+        public string FileName { get; set; }
+        public uint Start { get; set; }
+        public uint Length { get; set; }
+    }
+
+    /// <summary>
     /// 数据存储在文件中的懒加载资源, 其 <see cref="Dispose"/> 方法仅调用 <see cref="Clear"/> 方法, 以方便使用
     /// </summary>
-    public class LazyFileAsset : LazyFileAsset<IAsset> 
+    public class LazyFileAsset : LazyFileAsset<IAsset>, ILazyFileAsset
     {
         /// <summary>
         /// 目标资源类
@@ -26,7 +36,7 @@ namespace IYaManifest.Core.Base
     /// 数据存储在文件中的懒加载资源, 其 <see cref="Dispose"/> 方法仅调用 <see cref="Unload"/> 方法, 以方便使用
     /// </summary>
     /// <typeparam name="TAsset"></typeparam>
-    public class LazyFileAsset<TAsset> : ILazyAsset<TAsset>, IDisposable
+    public class LazyFileAsset<TAsset> : ILazyAsset<TAsset>, IDisposable, ILazyFileAsset
         where TAsset : IAsset
     {
         

@@ -28,10 +28,22 @@ namespace IYaManifestDemo.Pages
 
             ViewModel.OperationLogger = LevelLoggerHelper.LogTo(LogShower, "操作", string.Empty);
             ViewModel.TrackLogger = LevelLoggerHelper.LogTo(LogShower, "执行过程", string.Empty);
+
             DataContext = ViewModel;
         }
 
+
         public ManifestViewerPageViewModel ViewModel { get; private set; } = new();
+
+        private void CommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void CommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            ViewModel.OpenDetailWindowCommand.Execute(e.Parameter);    
+        }
     }
 
 }

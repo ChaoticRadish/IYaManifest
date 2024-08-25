@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace IYaManifestDemo.Assets
 {
-    internal class LazyImageAsset : LazyFileAsset<ImageAsset>
+    public class LazyImageAsset : LazyFileAsset<ImageAsset>
     {
     }
 }

@@ -12,10 +12,11 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Common_Util.Attributes.General;
+using Common_Util.IO;
 
 namespace IYaManifestDemo.Assets
 {
-    internal class ImageAsset : IAsset
+    public class ImageAsset : IAsset
     {
         public string AssetId { get; set; } = string.Empty;
         public string AssetType => nameof(AssetTypeEnum.Image);
@@ -25,26 +26,52 @@ namespace IYaManifestDemo.Assets
 
         [InfoToString]
         public BitmapDecoder? BitmapDecoder { get; set; }
+
+        public TempFileHelper.TempFile TempFile { get; set; }
+
+        ~ImageAsset()
+        {
+            TempFile.Dispose();
+        }
     }
 
-    internal class ImageAssetWriteReadImpl : AssetWriteReadImplBase<ImageAsset>
+    public class ImageAssetWriteReadImpl : AssetWriteReadImplBase<ImageAsset>
     {
         public override IOperationResult<ImageAsset> LoadFrom(Stream stream)
         {
             OperationResult<ImageAsset> result;
+            TempFileHelper.TempFile? tempFile = null;
             try
             {
-                BitmapFrame image = BitmapFrame.Create(stream, BitmapCreateOptions.None, BitmapCacheOption.None);
+                tempFile = TempFileHelper.NewTempFile();
+                using (var writeStream = tempFile.Value.OpenStream())
+                {
+                    stream.Seek(0, SeekOrigin.Begin);
+                    stream.CopyTo(writeStream);
+                }
+                var readStream = new FileStream(tempFile.Value.Path, FileMode.Open, FileAccess.Read);
+                BitmapFrame image;
+                try
+                {
+                    image = BitmapFrame.Create(readStream, BitmapCreateOptions.None, BitmapCacheOption.None);
+                }
+                catch
+                {
+                    readStream.Dispose();
+                    throw;
+                }
 
                 return result = new ImageAsset()
                 {
                     Image = image,
                     BitmapDecoder = image.Decoder,
+                    TempFile = tempFile.Value,
                 };
             }
             catch (Exception ex)
             {
                 OperationResultEx<ImageAsset> exResult = ex;
+                tempFile?.Dispose();
                 return exResult;
             }
         }
@@ -68,15 +95,18 @@ namespace IYaManifestDemo.Assets
 
         public override IOperationResult WriteTo(ImageAsset asset, Stream stream)
         {
-            OperationResult<byte[]> result;
+            OperationResult result;
             if (asset.BitmapDecoder == null || asset.Image == null)
             {
-                return result = Array.Empty<byte>();
+                return result = true;
             }
-            var encoder = BitmapEncoder.Create(asset.BitmapDecoder.CodecInfo.ContainerFormat);
-            encoder.Frames.Add(BitmapFrame.Create(asset.Image));
-            encoder.Save(stream);
-            return (OperationResult)true;
+            using var readStream = new FileStream(asset.TempFile.Path, FileMode.Open, FileAccess.Read);
+            readStream.CopyTo(stream);
+            //var encoder = BitmapEncoder.Create(asset.BitmapDecoder.CodecInfo.ContainerFormat);
+            //encoder.Frames.Add(BitmapFrame.Create(asset.Image));
+            //encoder.Save(stream);
+
+            return result = true;
         }
     }
 }

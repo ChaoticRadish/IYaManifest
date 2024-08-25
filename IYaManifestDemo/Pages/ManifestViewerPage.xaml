@@ -7,10 +7,11 @@
       xmlns:commonFG="clr-namespace:Common_Wpf.Controls.FeatureGroup;assembly=Common_Wpf"
       xmlns:layouts="clr-namespace:Common_Wpf.Controls.LayoutPanel;assembly=Common_Wpf"
       xmlns:converter="clr-namespace:Common_Wpf.Converter;assembly=Common_Wpf"
+      xmlns:iyaConverter="clr-namespace:IYaManifest.Wpf.Converter;assembly=IYaManifest.Wpf"
       xmlns:viewModel="clr-namespace:IYaManifestDemo.ViewModel"
-      xmlns:coreEnum="clr-namespace:IYaManifest.Enums;assembly=IYaManifest"
+      xmlns:coreEnum="clr-namespace:IYaManifest.Enums;assembly=IYaManifest.Base"
       xmlns:coreBase="clr-namespace:IYaManifest.Core.Base;assembly=IYaManifest"
-      xmlns:coreInterfaces="clr-namespace:IYaManifest.Interfaces;assembly=IYaManifest"
+      xmlns:coreInterfaces="clr-namespace:IYaManifest.Interfaces;assembly=IYaManifest.Base"
       xmlns:demoAssets="clr-namespace:IYaManifestDemo.Assets"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
@@ -25,6 +26,8 @@
         <converter:BoolToVisibilityConverter x:Key="boolToVisibilityConverter"/>
         <converter:ByteArrayToHexStringConverter x:Key="byteArrayToHexStringConverter"/>
         <converter:IsAssignableToConverter x:Key="isAssignableToConverter"/>
+        <RoutedCommand x:Key="OpenDetailWindowCommand" ></RoutedCommand>
+        <iyaConverter:HasPageTypeMappingConverter x:Key="hasPageTypeMappingConverter"/>
 
         <Style x:Key="OperationHeadArea" TargetType="ContentControl">
             <Setter Property="Template">
@@ -145,6 +148,13 @@
                         </Setter.Value>
                     </Setter>
                 </DataTrigger>
+                <DataTrigger Binding="{Binding Converter={StaticResource hasPageTypeMappingConverter}}" Value="True">
+                    <Setter Property="Content">
+                        <Setter.Value>
+                            <Button Padding="16, 8" Command="{StaticResource OpenDetailWindowCommand}" CommandParameter="{Binding}">查看资源详情</Button>
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
             </Style.Triggers>
             
             
@@ -152,11 +162,15 @@
 
     </Page.Resources>
 
+    <Page.CommandBindings>
+        <CommandBinding Command="{StaticResource OpenDetailWindowCommand}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed"></CommandBinding>
+    </Page.CommandBindings>
+
     <layouts:RetractableContainer RetractableAreaLocation="Right"
                                   RetractableAreaWidth="250">
         <layouts:RetractableContainer.RetractableAreaContent>
             <ContentControl>
-                <commonFG:SimpleLogShower x:Name="LogShower"></commonFG:SimpleLogShower>
+                <commonFG:SimpleLogShower x:Name="LogShower" TextWrapping="Wrap"></commonFG:SimpleLogShower>
             </ContentControl>
         </layouts:RetractableContainer.RetractableAreaContent>
 

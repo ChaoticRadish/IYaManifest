@@ -1,0 +1,63 @@
+﻿<Window x:Class="IYaManifest.Wpf.Windows.CommonAssetDisplayerWindow01"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:IYaManifest.Wpf.Windows"
+        xmlns:converter="clr-namespace:Common_Wpf.Converter;assembly=Common_Wpf"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance Type={x:Type local:CommonAssetDisplayerWindow01ViewModel}}"
+        Title="CommonAssetDisplayerWindow01" Height="450" Width="800">
+
+    <Window.Resources>
+        <converter:IsNotEmptyConverter x:Key="isNotEmptyConverter"/>
+        <converter:IsNullConverter x:Key="isNullConverter"/>
+    </Window.Resources>
+
+    <ContentControl>
+        <ContentControl.Style>
+            <Style TargetType="ContentControl">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding ErrorInfo, Converter={StaticResource isNotEmptyConverter}}" Value="True">
+                        <Setter Property="Content">
+                            <Setter.Value>
+                                <Label Content="{Binding ErrorInfo}" Margin="4"></Label>
+                            </Setter.Value>
+                        </Setter>
+                    </DataTrigger>
+
+                    <DataTrigger Binding="{Binding DisplayerPage, Converter={StaticResource isNullConverter}}" Value="False">
+                        <Setter Property="Content">
+                            <Setter.Value>
+                                <Frame Content="{Binding DisplayerPage}" NavigationUIVisibility="Hidden"></Frame>
+                            </Setter.Value>
+                        </Setter>
+                    </DataTrigger>
+
+                    <DataTrigger Binding="{Binding Showing, Converter={StaticResource isNullConverter}}" Value="True">
+                        <Setter Property="Content">
+                            <Setter.Value>
+                                <Label HorizontalContentAlignment="Center" VerticalContentAlignment="Center">&lt; null &gt;</Label>
+                            </Setter.Value>
+                        </Setter>
+                    </DataTrigger>
+
+                    <MultiDataTrigger>
+                        <MultiDataTrigger.Conditions>
+                            <Condition Binding="{Binding Showing, Converter={StaticResource isNullConverter}}" Value="False"/>
+                            <Condition Binding="{Binding PageTypeMappingItem, Converter={StaticResource isNullConverter}}" Value="True"/>
+                        </MultiDataTrigger.Conditions>
+                        <MultiDataTrigger.Setters>
+                            <Setter Property="Content">
+                                <Setter.Value>
+                                    <Label HorizontalContentAlignment="Center" VerticalContentAlignment="Center">未能取得对应的映射配置</Label>
+                                </Setter.Value>
+                            </Setter>
+                        </MultiDataTrigger.Setters>
+                    </MultiDataTrigger>
+
+                </Style.Triggers>
+            </Style>
+        </ContentControl.Style>
+    </ContentControl>
+</Window>

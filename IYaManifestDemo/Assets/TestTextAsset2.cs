@@ -11,15 +11,17 @@ using System.Threading.Tasks;
 
 namespace IYaManifestDemo.Assets
 {
-    internal class TestTextAsset2 : IAsset, ITestTextAsset
+    public class TestTextAsset2 : IAsset, ITestTextAsset
     {
         public string AssetId { get; set; } = string.Empty;
         public string AssetType => nameof(AssetTypeEnum.TestText2);
 
         public string Data { get; set; } = string.Empty;
+
+        public string DataString => Data;
     }
 
-    internal class TestTextAsset2WriteReadImpl : AssetWriteReadImplBase<TestTextAsset2>
+    public class TestTextAsset2WriteReadImpl : AssetWriteReadImplBase<TestTextAsset2>
     {
         public override IOperationResult<TestTextAsset2> LoadFrom(Stream stream)
         {

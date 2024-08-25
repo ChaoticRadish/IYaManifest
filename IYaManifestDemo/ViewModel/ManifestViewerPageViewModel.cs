@@ -5,6 +5,7 @@ using IYaManifest.Core;
 using IYaManifest.Core.V1;
 using IYaManifest.Defines;
 using IYaManifest.Interfaces;
+using IYaManifestDemo.Windows;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -12,12 +13,27 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace IYaManifestDemo.ViewModel
 {
     public class ManifestViewerPageViewModel : ViewModelBase
     {
+
+        public Action<Action>? UiInvoke { get; set; }
+        private void tryUiInvoke(Action action)
+        {
+            if (UiInvoke != null)
+            {
+                UiInvoke(action);
+            }
+            else
+            {
+                action();
+            }
+        }
+
         public ILevelLogger? OperationLogger { get; set; }
         public ILevelLogger? TrackLogger { get; set; }
 
@@ -144,6 +160,12 @@ namespace IYaManifestDemo.ViewModel
             get => lazyAsset;
             set
             {
+                if (lazyAsset != null && lazyAsset.Loaded)
+                {
+                    TrackLogger?.Info("当前选择的懒加载资源已被加载, 替换前自动卸载");
+                    lazyAsset.Unload();
+                }
+
                 if (lazyAsset != null)
                 {
                     lazyAsset.LoadedStateChanged -= LazyAsset_LoadedStateChanged;
@@ -196,6 +218,19 @@ namespace IYaManifestDemo.ViewModel
 
         #endregion
 
+
+        #region 详情弹窗
+        public ICommand OpenDetailWindowCommand => new SampleCommand(openDetailWindow, _ => true);
+        private void openDetailWindow(object? obj)
+        {
+            if (obj is not IAsset asset)
+            {
+                return;
+            }
+
+            DisplayerHelper.ShowAssetDetail(tryUiInvoke, asset, OperationLogger, TrackLogger);
+        }
+        #endregion
 
     }
 }

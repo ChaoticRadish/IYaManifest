@@ -25,7 +25,13 @@ namespace IYaManifest
 
         public static ILevelLogger? FileCreatorLogger { get; set; }
 
+        /// <summary>
+        /// 默认日志输出, 缓存所有日志, 直到设置了输出器
+        /// </summary>
+        public static LevelLoggerCreator DefaultLogger { get; set; } = new() { CacheCapacity = -1 };
         #endregion
+
+
 
     }
 }

@@ -1,0 +1,34 @@
+﻿<Window x:Class="IYaManifest.Wpf.Windows.CommonAssetCreatorWindow01"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:IYaManifest.Wpf.Windows"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance local:CommandAssetCreatorWindow01ViewModel}"
+        Title="CommonAssetCreatorWindow01" Height="450" Width="800">
+    <ContentControl DataContext="{Binding}">
+
+        <ContentControl.Style>
+            <Style TargetType="ContentControl">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding NoGotMatchPageType}" Value="True">
+                        <Setter Property="Content">
+                            <Setter.Value>
+                                <Label Content="{Binding NoGotInfo}" HorizontalAlignment="Center" VerticalAlignment="Center"></Label>
+                            </Setter.Value>
+                        </Setter>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding NoGotMatchPageType}" Value="False">
+                        <Setter Property="Content">
+                            <Setter.Value>
+                                <Frame Content="{Binding Page.AsPage}" NavigationUIVisibility="Hidden">
+                                </Frame>
+                            </Setter.Value>
+                        </Setter>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </ContentControl.Style>
+    </ContentControl>
+</Window>
