@@ -1,5 +1,6 @@
 ﻿using Common_Util.Data.Exceptions;
 using Common_Util.Data.Struct;
+using Common_Util.Extensions;
 using Common_Util.IO;
 using Common_Util.Streams;
 using Common_Util.String;
@@ -17,6 +18,12 @@ using System.Xml.Serialization;
 
 namespace IYaManifest.Core.V1
 {
+    /// <summary>
+    /// V1 版本的清单文件创建器
+    /// </summary>
+    /// <remarks>
+    /// 默认情况下, <see cref="Enums.AssetDataStorageModeEnum.Outside"/> 将不作处理
+    /// </remarks>
     public class ManifestFileCreator : ManifestFileCreatorBase
     {
         public override byte Version => 1;
@@ -67,6 +74,16 @@ namespace IYaManifest.Core.V1
             using Stream manifestAreaReadTFStream = manifestAreaTF.OpenStream();
             await ManifestFileCreatorDefaultImpls.FromStreamAsync(manifestAreaReadTFStream, dataAreaReadTFStream, Version, AppMark, dest);
 
+            if (DealOutsideStorageAsset != null)
+            {
+                foreach (var item in Manifest.Items)
+                {
+                    if (item.StorageMode == Enums.AssetDataStorageModeEnum.Outside)
+                    {
+                        await DealOutsideStorageAsset.Invoke(item, AssetWriteReader);
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -200,5 +217,73 @@ namespace IYaManifest.Core.V1
 
         }
 
+
+        #region 存放于外部的资源的处理方法
+
+        /// <summary>
+        /// 处理存储方式为外部存储 <see cref="Enums.AssetDataStorageModeEnum.Outside"/> 的资源的方法委托
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="assetWriteReader">资源读写器</param>
+        /// <returns></returns>
+        public delegate Task OutsideStorageAssetHandler(ManifestItem item, AssetWriteReader assetWriteReader);
+
+        /// <summary>
+        /// 处理存储方式为外部存储 <see cref="Enums.AssetDataStorageModeEnum.Outside"/> 的资源的方法
+        /// </summary>
+        public OutsideStorageAssetHandler? DealOutsideStorageAsset { get; init; }
+
+        #region 默认实现
+        /// <summary>
+        /// 取得默认的处理方法, 此方法会将资源存放到输入路径 (清单文件) 所属目录下的相对位置
+        /// </summary>
+        /// <remarks>
+        /// 如果资源没有外部路径信息, 将被跳过 <br/>
+        /// 如果未能获取资源所在目录的绝对路径, 将抛出异常
+        /// 如果未能将资源数据写入目标文件 (写入操作取得失败结果), 将抛出异常
+        /// 这个方法不会捕获异常! 
+        /// </remarks>
+        /// <param name="manifestFilePath"></param>
+        /// <param name="overwrite">资源应保存路径上, 如果已存在一个同名文件, 是否覆写? 如果不覆写, 文件已存在的情况下将跳过</param>
+        /// <returns></returns>
+        public static OutsideStorageAssetHandler DefaultOutsideStorageAssetHandler(string manifestFilePath, bool overwrite = false)
+        {
+            var dirPath = Path.GetDirectoryName(manifestFilePath) ?? throw new ArgumentException($"未能取得清单文件对应文件目录路径, 传入清单文件路径: {manifestFilePath}");
+            var rootStr = dirPath + "\\";
+            return (item, assetWriteReader) =>
+            {
+                if (item.OutsidePath.IsEmpty())
+                {
+                    return Task.CompletedTask;
+                }
+                else
+                {
+                    var _absPath = PathHelper.GetAbsolutePath(rootStr, item.OutsidePath);
+                    _ = Path.GetFileName(_absPath) ?? throw new IOException($"生成绝对路径得到的字符串不是有效的路径字符串: {_absPath}");
+                    var _dirPath = Path.GetDirectoryName(_absPath) ?? throw new IOException($"未能取得资源应该存储位置的文件目录路径, 生成得绝对路径: {_absPath}");
+                    if (!Directory.Exists(_dirPath))
+                    {
+                        Directory.CreateDirectory(_dirPath);
+                    }
+                    if (!overwrite && File.Exists(_absPath))
+                    {
+                        return Task.CompletedTask;
+                    }
+                    using FileStream fs = new FileStream(_absPath, overwrite ? FileMode.Create : FileMode.CreateNew);
+
+                    var writeResult = assetWriteReader.WriteTo(item.AssetType, item.AssetReference, fs);
+                    if (writeResult.IsFailure)
+                    {
+                        throw new OperationFailureException(writeResult);
+                    }
+
+                    return Task.CompletedTask;
+                }
+            };
+
+        }
+        #endregion
+
+        #endregion
     }
 }
