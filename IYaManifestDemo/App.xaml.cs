@@ -77,7 +77,8 @@ namespace IYaManifestDemo
                 editorPageClass: typeof(TestTextAsset2EditorPage));
             setDefaultMapping(AssetTypeEnum.Image,
                 typeof(ImageAsset), typeof(ImageAssetWriteReadImpl), 
-                displayerPageClass: typeof(ImageAssetDisplayerPage));
+                displayerPageClass: typeof(ImageAssetDisplayerPage),
+                editorPageClass: typeof(ImageAssetEditorPage));
 
             loadExtensionDlls();
         }

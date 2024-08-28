@@ -296,6 +296,7 @@ namespace IYaManifestDemo.ViewModel
                                 .ToArray(),
                         },
 
+                        DealOutsideStorageAsset = ManifestFileCreator.DefaultOutsideStorageAssetHandler(fileName, true),
                     };
                     await creator.CreateAsync(fileName);
                     TrackLogger?.Info($"清单文件创建完成");
@@ -753,6 +754,7 @@ namespace IYaManifestDemo.ViewModel
                 StorageMode = StorageMode,
                 Remark = ItemRemark,
                 AssetReference = result.Data!,
+                OutsidePath = OutsidePathInput,
             };
             if (item.AssetCode.IsRange)
             {
