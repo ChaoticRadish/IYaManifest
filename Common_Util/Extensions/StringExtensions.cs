@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -70,7 +71,7 @@ namespace Common_Util.Extensions
         /// <param name="value"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsEmpty(this string? value)
+        public static bool IsEmpty([NotNullWhen(false)] this string? value)
         {
             return string.IsNullOrEmpty(value);
         }
@@ -80,7 +81,7 @@ namespace Common_Util.Extensions
         /// <param name="value"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsNotEmpty(this string? value)
+        public static bool IsNotEmpty([NotNullWhen(true)] this string? value)
         {
             return !string.IsNullOrEmpty(value);
         }
@@ -92,7 +93,7 @@ namespace Common_Util.Extensions
         /// <param name="throwException">在字符串null或者空字符串时, 是否抛出异常</param>
         /// <param name="varName">变量名</param>
         /// <returns>检查通过时返回true</returns>
-        public static bool CheckEmpty(this string? value, bool throwException = false, string? varName = null)
+        public static bool CheckEmpty([NotNullWhen(true)] this string? value, bool throwException = false, string? varName = null)
         {
             if (string.IsNullOrEmpty(value))
             {
@@ -197,7 +198,7 @@ namespace Common_Util.Extensions
         /// </summary>
         /// <param name="ip"></param>
         /// <returns></returns>
-        public static bool IsIPv4(this string? ip)
+        public static bool IsIPv4([NotNullWhen(true)] this string? ip)
         {
             if (ip == null) return false;
             return IPv4Regex.Match(ip).Success;
@@ -207,7 +208,7 @@ namespace Common_Util.Extensions
         /// </summary>
         /// <param name="ip"></param>
         /// <returns></returns>
-        public static bool IsIPv6(this string? ip)
+        public static bool IsIPv6([NotNullWhen(true)] this string? ip)
         {
             if (ip == null) return false;
             return IPv6Regex.Match(ip).Success;
