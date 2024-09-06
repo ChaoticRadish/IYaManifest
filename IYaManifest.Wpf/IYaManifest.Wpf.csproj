@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Common_Wpf\Common_Wpf.csproj" />
+    <ProjectReference Include="..\CommonLibs\Common_Wpf\Common_Wpf.csproj" />
     <ProjectReference Include="..\IYaManifest.Base\IYaManifest.Base.csproj" />
   </ItemGroup>
 

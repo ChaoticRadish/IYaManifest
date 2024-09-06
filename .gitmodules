@@ -1,0 +1,4 @@
+[submodule "CommonLibs"]
+	path = CommonLibs
+	url = https://github.com/ChaoticRadish/CommonLibs.git
+	branch = crossplatform-wpf
