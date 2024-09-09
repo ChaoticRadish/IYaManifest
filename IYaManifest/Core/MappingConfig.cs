@@ -101,7 +101,7 @@ namespace IYaManifest.Core
         /// <param name="assetType"></param>
         /// <param name="setting"></param>
         /// <returns></returns>
-        public bool TryGet(string assetType, out ConfigItem? setting)
+        public bool TryGet(string assetType, [NotNullWhen(true)] out ConfigItem? setting)
         {
             if (AssetType2AnalysisDic.TryGetValue(assetType, out _))
             {
@@ -134,7 +134,7 @@ namespace IYaManifest.Core
         /// <param name="setting"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public bool TryGet<TEnum>(TEnum @enum, out ConfigItem? setting) where TEnum : Enum
+        public bool TryGet<TEnum>(TEnum @enum, [NotNullWhen(true)] out ConfigItem? setting) where TEnum : Enum
         {
             return TryGet(@enum.ToString() ?? throw new ArgumentException("未能取得枚举值对应字符串"), out setting);
         }
