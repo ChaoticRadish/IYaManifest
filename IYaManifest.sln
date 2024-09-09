@@ -10,8 +10,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Git", "Git", "{B100102F-1C1
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IYaManifestDemo", "IYaManifestDemo\IYaManifestDemo.csproj", "{7A39990D-463F-4756-86B9-B66F7F5DE2C2}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IYaManifest.Base", "IYaManifest.Base\IYaManifest.Base.csproj", "{CAFDA7C5-2FF2-45B4-AF9C-2662CDAD426B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IYaManifest.Wpf", "IYaManifest.Wpf\IYaManifest.Wpf.csproj", "{7BA8B7EF-0416-4458-8316-46049F01A9AF}"
@@ -34,10 +32,6 @@ Global
 		{C717203F-0E34-4646-8C8F-CC6DBB02BBE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C717203F-0E34-4646-8C8F-CC6DBB02BBE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C717203F-0E34-4646-8C8F-CC6DBB02BBE3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7A39990D-463F-4756-86B9-B66F7F5DE2C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7A39990D-463F-4756-86B9-B66F7F5DE2C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7A39990D-463F-4756-86B9-B66F7F5DE2C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7A39990D-463F-4756-86B9-B66F7F5DE2C2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CAFDA7C5-2FF2-45B4-AF9C-2662CDAD426B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CAFDA7C5-2FF2-45B4-AF9C-2662CDAD426B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CAFDA7C5-2FF2-45B4-AF9C-2662CDAD426B}.Release|Any CPU.ActiveCfg = Release|Any CPU
