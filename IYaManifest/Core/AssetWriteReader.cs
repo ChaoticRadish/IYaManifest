@@ -14,6 +14,14 @@ namespace IYaManifest.Core
     /// </summary>
     public class AssetWriteReader
     {
+        #region 全局值
+        private readonly static Lazy<AssetWriteReader> lazyDefault = new(() => new AssetWriteReader());
+        /// <summary>
+        /// 通用缺省值单例
+        /// </summary>
+        public static AssetWriteReader Default => lazyDefault.Value;
+        #endregion
+
         #region 实现映射
         /// <summary>
         /// 读写实现类型的映射
