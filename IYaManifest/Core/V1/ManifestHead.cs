@@ -25,7 +25,7 @@ namespace IYaManifest.Core.V1
             set
             {
                 PackageKey = Common_Util.Data.Constraint.StringConveyingHelper.FromString<GroupIdPair>(value);
-                packageStr = PackageKey.ToString();
+                packageStr = PackageKey.ConvertToString();
             }
         }
         private string packageStr = string.Empty;
