@@ -1,4 +1,4 @@
-﻿using IYaManifest.Base.Interfaces;
+﻿using IYaManifest.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
