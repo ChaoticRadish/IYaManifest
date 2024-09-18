@@ -1,6 +1,5 @@
 ﻿using Common_Util.Extensions;
 using IYaManifest.Interfaces;
-using IYaManifest.Interfaces;
 using IYaManifestDemo.ViewModel;
 using System;
 using System.Collections.Generic;
