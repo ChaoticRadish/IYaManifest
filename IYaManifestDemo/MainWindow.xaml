@@ -16,6 +16,8 @@
                                                    PageType="{x:Type pages:ManifestViewerPage}"/>
             <commonVM:PageSwictherItemWithPageType Id="2" Name="清单创建" Brief="创建 V1 版本的清单文件"
                                                    PageType="{x:Type pages:ManifestCreatorPage}"/>
+            <commonVM:PageSwictherItemWithPageType Id="3" Name="类型映射" Brief="查看已加载的映射关系"
+                                                   PageType="{x:Type pages:CurrentMappingPage}"/>
             <commonVM:PageSwictherItemWithPageType Id="10" Name="运行日志" Brief="Globals.DefaultLogger"
                                                    PageType="{x:Type pages:DefaultLogPage}"/>
             <commonVM:PageSwictherItemWithPageType Id="100" Name="测试" Brief="开发过程中的一些小测试"
