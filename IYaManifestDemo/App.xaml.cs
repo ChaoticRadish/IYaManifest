@@ -5,6 +5,7 @@ using IYaManifest.Core;
 using IYaManifest.Core.V1;
 using IYaManifest.Extensions;
 using IYaManifest.Wpf;
+using IYaManifestDemo.AppManage;
 using IYaManifestDemo.Assets;
 using IYaManifestDemo.Pages.Assets;
 using System.Configuration;
@@ -80,7 +81,7 @@ namespace IYaManifestDemo
                 displayerPageClass: typeof(ImageAssetDisplayerPage),
                 editorPageClass: typeof(ImageAssetEditorPage));
 
-            loadExtensionDlls();
+            MappingHelper.LoadAllExDll(Common_Util.Enums.AppendConflictDealMode.Ignore, null);
         }
 
         private void setDefaultMapping(
@@ -104,48 +105,6 @@ namespace IYaManifestDemo
             }
         }
 
-        /// <summary>
-        /// 扫描根目录下的 Extensions 文件夹, 加载其中的 DLL 文件
-        /// </summary>
-        private void loadExtensionDlls()
-        {
-            string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Extensions");
-            DirectoryInfo dir = new DirectoryInfo(path);
-            if (!dir.Exists)
-            {
-                dir.Create();
-                return;
-            }
-            foreach (var file in dir.GetFiles())
-            {
-                if (file.Extension.Equals(".dll", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    loadDllFile(file.FullName);
-                }
-            }
-        }
-        private void loadDllFile(string filePath)
-        {
-            var logger = Globals.DefaultLogger.Get("映射关系", "加载DLL");
-
-            logger.Info($"尝试加载 DLL 文件: {filePath}");
-            try
-            {
-                AssetWriteReader.DefaultMapping.AppendDll(
-                    Common_Util.Enums.AppendConflictDealMode.Ignore, 
-                    Common_Util.Enums.AppendConflictDealMode.Ignore, 
-                    filePath);
-
-                PageTypeMapManager.Instance.AddFromDll(filePath);
-
-
-                logger.Info($"加载完成");
-            }
-            catch (Exception ex)
-            {
-                logger.Error($"加载 DLL 文件异常", ex);
-            }
-        }
     }
 
 }
