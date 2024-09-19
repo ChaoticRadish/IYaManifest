@@ -189,7 +189,8 @@ namespace IYaManifest.Wpf
         /// 添加映射项
         /// </summary>
         /// <param name="item"></param>
-        public void Add(IPageTypeMappingItem item)
+        /// <param name="conflictDealMode">当准备加入的映射关系出现冲突时 (即已有相同类型相同标签的映射关系), 需要采取的处理方式</param>
+        public void Add(IPageTypeMappingItem item, Common_Util.Enums.AppendConflictDealMode conflictDealMode = AppendConflictDealMode.Override)
         {
             ArgumentNullException.ThrowIfNull(item.AssetType);
             if (!MappingItems.TryGetValue(item.AssetType, out var items))
@@ -197,14 +198,39 @@ namespace IYaManifest.Wpf
                 items = new List<IPageTypeMappingItem>();
                 MappingItems[item.AssetType] = items;
             }
-            items.Add(item);
+            var exist = items.FirstOrDefault(i => i.AssetType == item.AssetType && i.Tags.DisorderEquals(item.Tags));
+            if (exist == null)
+            {
+                items.Add(item);
+            }
+            else
+            {
+                switch (conflictDealMode)
+                {
+                    case AppendConflictDealMode.Override:
+                        int index = items.IndexOf(exist);
+                        if (index < 0)
+                        {
+                            throw new InvalidOperationException("覆盖已有映射关系时, 未能取得已有映射关系在列表中的索引! ");
+                        }
+                        items[index] = item;
+                        break;
+                    case AppendConflictDealMode.Ignore:
+                        return;
+                    case AppendConflictDealMode.Exception:
+                        throw new InvalidOperationException(
+                            $"已有相同类型 ({item.AssetType.Name}) 相同标签 ({(item.Tags.Length == 0 ? "无标签": Common_Util.String.StringHelper.Concat(item.Tags, "; "))}) 的项");
+                    default: throw new NotImplementedException($"未实现冲突处理方式: {conflictDealMode}");
+                }
+            }
         }
 
         /// <summary>
         /// 加载 DLL 文件, 寻找其中标记导出的映射项, 添加到当前映射管理器中
         /// </summary>
         /// <param name="dllPath"></param>
-        public void AddFromDll(string dllPath)
+        /// <param name="conflictDealMode">加载过程中如果遇到冲突项 (即已有相同类型相同标签的映射关系), 需要采取的处理方式</param>
+        public void AddFromDll(string dllPath, Common_Util.Enums.AppendConflictDealMode conflictDealMode = AppendConflictDealMode.Override)
         {
             List<IPageTypeMappingItem> waitAddItems = [];
             Assembly assembly = Assembly.LoadFrom(dllPath);
