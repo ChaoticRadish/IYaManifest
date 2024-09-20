@@ -45,6 +45,7 @@ namespace IYaManifestDemo.Windows
                         displayer = new CommonDisplayerWindow()
                         {
                             Showing = asset,
+                            Title = $"创建 {asset.AssetType ?? "<null>"} 资源 ::: {mappingItem.AssetType.Name}"
                         };
                     });
                 }
@@ -55,6 +56,7 @@ namespace IYaManifestDemo.Windows
                         displayer = new CommonAssetDisplayerWindow01()
                         {
                             Showing = asset,
+                            Title = $"创建 {asset.AssetType ?? "<null>"} 资源 ::: {mappingItem.AssetType.Name}"
                         };
                     });
                 }
