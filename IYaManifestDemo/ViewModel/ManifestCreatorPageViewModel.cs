@@ -951,6 +951,7 @@ namespace IYaManifestDemo.ViewModel
                         var window = new CommonAssetEditorWindow01()
                         {
                             Input = asset,
+                            Title = $"编辑 {asset.AssetType} 资源 ::: {mappingItem.AssetType.Name}"
                         };
                         if (window.ShowDialog() == true)
                         {
