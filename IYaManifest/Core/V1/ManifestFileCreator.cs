@@ -26,6 +26,9 @@ namespace IYaManifest.Core.V1
     /// </remarks>
     public class ManifestFileCreator : ManifestFileCreatorBase
     {
+        /// <summary>
+        /// 文件格式的版本号. 固定返回 1, 代表 V1 版本
+        /// </summary>
         public override byte Version => 1;
 
         public override uint AppMark { get; set; }
