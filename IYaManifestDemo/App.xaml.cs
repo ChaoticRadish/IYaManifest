@@ -55,10 +55,23 @@ namespace IYaManifestDemo
                     return asset;
                 }
             });
+            //IYaManifest.Core.ManifestFileReadHelper.SetImpl(new IYaManifest.Core.ManifestFileReadHelper.ReadImpl()
+            //{
+            //    Version = 1,
+            //    AppMark = 42,
+            //    GetReaderFunc = content =>
+            //    {
+            //        return new IYaManifest.Core.V1.ManifestFileReader(
+            //            IYaManifest.Core.V1.ManifestFileReaderContext.From(content))
+            //        {
+            //            AssetLoadModeSelector = selector
+            //        };
+            //    },
+            //});
             IYaManifest.Core.ManifestFileReadHelper.SetImpl(new IYaManifest.Core.ManifestFileReadHelper.ReadImpl()
             {
                 Version = 1,
-                AppMark = 42,
+                AppMark = null,
                 GetReaderFunc = content =>
                 {
                     return new IYaManifest.Core.V1.ManifestFileReader(
