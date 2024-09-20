@@ -367,9 +367,15 @@
                     <Label Style="{StaticResource TitleLabel}">文件头</Label>
 
                     <ContentControl Style="{StaticResource InputRow}">
-                        <StackPanel Orientation="Horizontal">
-                            <Label Style="{StaticResource KeyLabel}">应用标记 (AppMark)</Label>
-                            <TextBox Width="120" Text="{Binding AppMark, Converter={StaticResource stringToNumberConverter}}"></TextBox>
+                        <StackPanel Orientation="Vertical">
+                            <StackPanel Orientation="Horizontal">
+                                <Label Style="{StaticResource KeyLabel}">清单版本 (Version)</Label>
+                                <Label>固定为 1</Label>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <Label Style="{StaticResource KeyLabel}">应用标记 (AppMark)</Label>
+                                <TextBox Width="120" Text="{Binding AppMark, Converter={StaticResource stringToNumberConverter}}"></TextBox>
+                            </StackPanel>
                         </StackPanel>
                     </ContentControl>
                     

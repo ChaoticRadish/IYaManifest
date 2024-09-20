@@ -760,6 +760,10 @@ namespace IYaManifestDemo.ViewModel
                 TrackLogger?.Info($"无效的资源编码, 无法使用范围编码值! ");
                 return;
             }
+            if (item.AssetReference.AssetId.IsEmpty())
+            {
+                item.AssetReference.AssetId = item.AssetCode;
+            }
 
             switch (Md5Setting)
             {
