@@ -214,6 +214,15 @@ namespace IYaManifest.Interfaces
     public abstract class AssetEditorEditDone<TAsset> : AssetEditorBase<TAsset>
         where TAsset : IAsset
     {
+        #region 状态
+        /// <summary>
+        /// 当前是否处于允许编辑的状态, 在 <see cref="ConvertToOutput"/> 执行过程中为 <see langword="false"/>, 其余时间为 <see langword="true"/>
+        /// </summary>
+        public virtual bool AllowEdit { get; protected set; } = true;
+
+        private static readonly object ConvertToOutputLocker = new();
+        #endregion
+
         private TAsset? input { get; set; }
         public override TAsset? Input
         {
@@ -246,10 +255,34 @@ namespace IYaManifest.Interfaces
         /// </remarks>
         public virtual void EditDone()
         {
-            TAsset output = ConvertToOutput();
+            TAsset output = InvokeConvertToOutput();
             Output = output;
             TriggerOnEditDone(output);
         }
+
+        /// <summary>
+        /// 调用 <see cref="ConvertToOutput"/>, 这个过程中会更新 <see cref="AllowEdit"/>
+        /// </summary>
+        /// <returns></returns>
+        protected TAsset InvokeConvertToOutput()
+        {
+            lock (ConvertToOutputLocker)
+            {
+                AllowEdit = false;
+
+                TAsset output;
+                try
+                {
+                    output = ConvertToOutput();
+                }
+                finally
+                {
+                    AllowEdit = true;
+                }
+                return output;
+            }
+        }
+       
 
         /// <summary>
         /// 将当前输入内容转换为输出结果
