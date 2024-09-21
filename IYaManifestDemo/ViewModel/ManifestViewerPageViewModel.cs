@@ -223,8 +223,20 @@ namespace IYaManifestDemo.ViewModel
         public ICommand OpenDetailWindowCommand => new SampleCommand(openDetailWindow, _ => true);
         private void openDetailWindow(object? obj)
         {
-            if (obj is not IAsset asset)
+            IAsset? asset;
+            if (obj is IAsset _asset)
             {
+                asset = _asset;
+                OperationLogger?.Info($"尝试打开资源的详情窗口, 目标资源引用为传入命令的对象");
+            }
+            else
+            {
+                asset = SelectedItem?.AssetReference;
+                OperationLogger?.Info($"尝试打开资源的详情窗口, 目标资源引用为当前选择项的资源引用");
+            }
+            if (asset == null) 
+            {
+                TrackLogger?.Warning("未能打开详情窗口, 尝试获取的资源引用为 null ");
                 return;
             }
 

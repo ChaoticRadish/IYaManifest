@@ -25,10 +25,28 @@ namespace IYaManifestDemo.Windows
                 showAsset(uiRun, asset, operationLogger, trackLogger);
             }
         }
-        private static void showLazyAsset(Action<Action> uiRun, IAsset lazyAsset,
+        private static void showLazyAsset(Action<Action> uiRun, ILazyAsset lazyAsset,
             ILevelLogger? operationLogger, ILevelLogger? trackLogger)
         {
             operationLogger?.Info("显示懒加载资源: " + lazyAsset.ToString());
+            bool loadMark = false;
+            if (!lazyAsset.Loaded)
+            {
+                lazyAsset.Load();
+            }
+            IAsset? asset = lazyAsset.Asset;
+            if (asset == null)
+            {
+                trackLogger?.Warning("懒加载资源加载后, 资源引用仍为 null 值");
+            }
+            else
+            {
+                showAsset(uiRun, asset, operationLogger, trackLogger);
+            }
+            if (loadMark)
+            {
+                lazyAsset.Unload();
+            }
         }
         private static void showAsset(Action<Action> uiRun, IAsset asset,
             ILevelLogger? operationLogger, ILevelLogger? trackLogger)

@@ -29,6 +29,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
+using IYaManifest.Defines;
 
 namespace IYaManifestDemo.ViewModel
 {
@@ -59,10 +60,16 @@ namespace IYaManifestDemo.ViewModel
         }
 
         #region 文件数据
+        /// <summary>
+        /// 文件头.应用标记
+        /// </summary>
         public uint AppMark { get => appMark; set { appMark = value; OnPropertyChanged(); } }
         private uint appMark;
 
         private string name = string.Empty;
+        /// <summary>
+        /// 清单头.清单名
+        /// </summary>
         public string Name
         {
             get => name;
@@ -75,6 +82,9 @@ namespace IYaManifestDemo.ViewModel
 
 
         private string package = string.Empty;
+        /// <summary>
+        /// 清单头.包名
+        /// </summary>
         public string Package
         {
             get => package;
@@ -86,6 +96,9 @@ namespace IYaManifestDemo.ViewModel
         }
 
         private string remark = string.Empty;
+        /// <summary>
+        /// 清单头.备注
+        /// </summary>
         public string Remark
         {
             get => remark;
@@ -97,6 +110,9 @@ namespace IYaManifestDemo.ViewModel
         }
 
         private string version = string.Empty;
+        /// <summary>
+        /// 清单头.版本号
+        /// </summary>
         public string Version
         {
             get => version;
@@ -174,6 +190,7 @@ namespace IYaManifestDemo.ViewModel
             #region UI相关
             public bool IsItem => !Code.IsRange;
 
+            [MemberNotNullWhen(true, nameof(RelateItem))]
             public bool HasRelateItem { get => RelateItem != null; }
             
             public bool NotHasRelateItem { get => RelateItem == null; }
@@ -246,13 +263,35 @@ namespace IYaManifestDemo.ViewModel
 
 
         #region 操作
-        public ICommand ResetCommand => new SampleCommand(_ => Reset(), _ => true);
+        public ICommand ResetCommand => new SampleCommand(Reset);
         public void Reset()
         {
+            try
+            {
+                OperationLogger?.Info("重置当前输入内容");
+                AppMark = 0;
+                Name = string.Empty;
+                Package = string.Empty;
+                Remark = string.Empty;
+                Version = string.Empty;
 
+
+                foreach (var item in ManifestItemTree.Preorder())
+                {
+                    if (item.HasRelateItem && item.RelateItem.AssetReference is IDisposable disposableAsset)
+                    {
+                        disposableAsset.Dispose();
+                    }
+                }
+                ManifestItemTree.RemoveRootNode();
+            }
+            catch (Exception ex)
+            {
+                TrackLogger?.Error("重置当前输入内容失败", ex);
+            }
         }
 
-        public ICommand CreateFileCommand => new SampleCommand(_ => CreateFile(), _ => true);
+        public ICommand CreateFileCommand => new SampleCommand(CreateFile);
         public void CreateFile()
         {
             _ = createFile();
@@ -306,9 +345,105 @@ namespace IYaManifestDemo.ViewModel
                 }
             }
         }
+
+        public ICommand OpenManifestCommand => new SampleCommand(OpenManifest);
+        public void OpenManifest()
+        {
+            _ = openManifestAsync();
+        }
+        private async Task openManifestAsync()
+        {
+            OpenFileDialog dialog = new()
+            {
+                Multiselect = false,
+            };
+            if (dialog.ShowDialog() != true)
+            {
+                return;
+            }
+            OperationLogger?.Info("选择文件作为当前输入内容: " + dialog.FileName);
+            string fileName = dialog.FileName;
+
+            var headResult = await ManifestFileReadHelper.TryReadHeadAsync(fileName);
+            if (headResult.IsFailure)
+            {
+                TrackLogger?.Warning("读取清单文件头失败, " + headResult.FailureReason);
+                return;
+            }
+            var fileHead = headResult.Data;
+
+            if (fileHead.VersionValue != 1)
+            {
+                TrackLogger?.Warning($"无法打开非 V1 版本清单文件作为当前输入内容, 文件版本值: {fileHead.VersionValue}");
+            }
+
+            var resultResult = await ManifestFileReadHelper.TryReadAsync<ManifestHead, ManifestItem>(fileName);
+            if (resultResult.IsFailure)
+            {
+                TrackLogger?.Warning("读取清单文件为清单对象失败, " + resultResult.FailureReason);
+                return;
+            }
+            if (resultResult.Data == null)
+            {
+                TrackLogger?.Warning("读取清单文件为清单文件成功, 但是取得 null 值");
+                return;
+            }
+
+            try
+            {
+                SetCurrentInput(fileHead, resultResult.Data);
+            }
+            catch (Exception ex)
+            {
+                TrackLogger?.Error("设置清单为当前输入内容发生异常", ex);
+            }
+        }
+
+        /// <summary>
+        /// 将指定的清单设置为当前输入内容
+        /// </summary>
+        /// <param name="manifest"></param>
+        private void SetCurrentInput(ManifestFileHead fileHead, IManifest<ManifestHead, ManifestItem> manifest)
+        {
+            AppMark = fileHead.AppMarkValue;
+
+            var head = manifest.Head;
+
+            Name = head.Name;
+            Package = head.Package;
+            Remark = head.Remark;
+            Version = head.Version;
+
+            foreach (var item in ManifestItemTree.Preorder())
+            {
+                if (item.HasRelateItem && item.RelateItem.AssetReference is IDisposable disposableAsset)
+                {
+                    disposableAsset.Dispose();
+                }
+            }
+            ManifestItemTree.RemoveRootNode();
+            foreach (var item in manifest.Items)
+            {
+                ManifestUiItem uiItem = ManifestUiItem.CreateItemFromItem(item);
+
+                ManifestItemTree.OrderlyAdd<string, ManifestUiItem>(
+                    uiItem,
+                    (path) => uiItem.Code.PathEquals(path) ? uiItem : ManifestUiItem.CreateItemFromPath(path),
+                    ManifestUiItem.CreateRangeFromPath,
+                    desc: false,
+                    comparer: new LayeringAddressCodeComparer<string, ManifestUiItem>());
+                TrackLogger?.Info("添加清单项完成: " + item.AssetId);
+                //OnPropertyChanged(nameof(ManifestItemTree));
+                OnPropertyChanged(nameof(ShowingTopLayerNodes));
+            }
+        }
+
         #endregion
 
         #region 清单资源项
+
+        #region 选择类型名与映射资源
+
         private string? selectedType = null;
         public string? SelectedType 
         {
@@ -349,8 +484,14 @@ namespace IYaManifestDemo.ViewModel
                 OnPropertyChanged(nameof(HasMappingAssetClass));
             } 
         }
+        /// <summary>
+        /// <see cref="MappingAssetClass"/> 是否非空
+        /// </summary>
         public bool HasMappingAssetClass { get => mappingAssetClass != null; }
 
+        #endregion
+
+        #region 资源编码输入
 
         private string assetCodeSpace = string.Empty;
         public string AssetCodeSpace 
@@ -399,6 +540,8 @@ namespace IYaManifestDemo.ViewModel
             }
         }
         public string AssetCodeString { get => (string)assetCode; }
+
+        #endregion
 
         public ObservableCollection<string> AssetTypes { get; } = [];
 
@@ -937,8 +1080,45 @@ namespace IYaManifestDemo.ViewModel
             OperationLogger?.Info("编辑资源: " + asset.ToString());
 
             bool editDone = false;
+
+            IAsset oldAsset;
+
+            Type assetType;
+            bool lazyAssetLoadMark = false;
+            if (asset is ILazyAsset lazyAsset)
+            {
+                if (lazyAsset.ExpectReferenceType == null)
+                {
+                    TrackLogger?.Warning("未能取得懒加载资源的预期引用类型");
+                    newAsset = null;
+                    return false;
+                }
+                assetType = lazyAsset.ExpectReferenceType;
+                if (!lazyAsset.Loaded)
+                {
+                    lazyAsset.Load();
+                    lazyAssetLoadMark = true;
+                }
+                if (lazyAsset.Asset == null)
+                {
+                    TrackLogger?.Warning("懒加载资源加载后, 资源引用仍为 null 值");
+                    if (lazyAssetLoadMark)
+                    {
+                        lazyAsset.Unload();
+                    }
+                    newAsset = null;
+                    return false;
+                }
+                oldAsset = lazyAsset.Asset;
+            }
+            else
+            {
+                assetType = asset.GetType();
+                oldAsset = asset;
+            }
+
             IAsset? newOne = null;
-            if (PageTypeMapManager.Instance.TryGet(asset.GetType(), out var mappingItem))
+            if (PageTypeMapManager.Instance.TryGet(assetType, out var mappingItem))
             {
                 if (mappingItem.EditorType == null)
                 {
@@ -950,7 +1130,7 @@ namespace IYaManifestDemo.ViewModel
                     {
                         var window = new CommonAssetEditorWindow01()
                         {
-                            Input = asset,
+                            Input = oldAsset,
                             Title = $"编辑 {asset.AssetType} 资源 ::: {mappingItem.AssetType.Name}"
                         };
                         if (window.ShowDialog() == true)
