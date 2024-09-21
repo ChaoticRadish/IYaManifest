@@ -657,6 +657,7 @@
 
             <ContentControl Grid.Row="1" Style="{StaticResource OperationArea}">
                 <StackPanel Orientation="Horizontal">
+                    <Button Style="{StaticResource OperationButton}" Command="{Binding OpenManifestCommand}">打开清单</Button>
                     <Button Style="{StaticResource OperationButton}" Command="{Binding ResetCommand}">重置输入</Button>
                     <Button Style="{StaticResource OperationButton}" Command="{Binding CreateFileCommand}">保存清单文件</Button>
                 </StackPanel>
