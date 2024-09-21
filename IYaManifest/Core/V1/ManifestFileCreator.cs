@@ -6,6 +6,7 @@ using Common_Util.Streams;
 using Common_Util.String;
 using Common_Util.Xml;
 using IYaManifest.Core.Base;
+using IYaManifest.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -241,10 +242,12 @@ namespace IYaManifest.Core.V1
         /// 取得默认的处理方法, 此方法会将资源存放到输入路径 (清单文件) 所属目录下的相对位置
         /// </summary>
         /// <remarks>
-        /// 如果资源没有外部路径信息, 将被跳过 <br/>
-        /// 如果未能获取资源所在目录的绝对路径, 将抛出异常
-        /// 如果未能将资源数据写入目标文件 (写入操作取得失败结果), 将抛出异常
-        /// 这个方法不会捕获异常! 
+        /// - 如果资源没有外部路径信息, 将被跳过 <br/>
+        /// - 如果未能获取资源所在目录的绝对路径, 将抛出异常 <br/>
+        /// - 如果未能将资源数据写入目标文件 (写入操作取得失败结果), 将抛出异常 <br/>
+        /// - 当处理懒加载资源时, 如果资源未加载, 会先加载以取得最终资源的引用. 如果在处理过程中执行了加载, 则会在使用完毕后将其卸载 <br/>
+        /// (如果使用前就已经加载了, 则不会卸载) <br/>
+        /// 注: 这个方法取得的处理方法执行过程中, 不会捕获异常!
         /// </remarks>
         /// <param name="manifestFilePath"></param>
         /// <param name="overwrite">资源应保存路径上, 如果已存在一个同名文件, 是否覆写? 如果不覆写, 文件已存在的情况下将跳过</param>
@@ -274,7 +277,24 @@ namespace IYaManifest.Core.V1
                     }
                     using FileStream fs = new FileStream(_absPath, overwrite ? FileMode.Create : FileMode.CreateNew);
 
-                    var writeResult = assetWriteReader.WriteTo(item.AssetType, item.AssetReference, fs);
+                    IAsset asset = item.AssetReference;
+                    if (asset is ILazyAsset lazyAsset)
+                    {
+                        bool loadMark = false;
+                        if (!lazyAsset.Loaded)
+                        {
+                            lazyAsset.Load();
+                            loadMark = true;
+                        }
+
+                        asset = lazyAsset.Asset ?? throw new InvalidOperationException("懒加载资源在已载入的状态下, 资源引用属性仍是 null 值");
+
+                        if (loadMark)
+                        {
+                            lazyAsset.Unload();
+                        }
+                    }
+                    var writeResult = assetWriteReader.WriteTo(item.AssetType, asset, fs);
                     if (writeResult.IsFailure)
                     {
                         throw new OperationFailureException(writeResult);
