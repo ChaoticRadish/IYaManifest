@@ -1,5 +1,5 @@
-﻿using Common_Util.Attributes.Xml;
-using Common_Util.Data.Structure.Pair;
+﻿using ChaoticKit.Attributes.Xml;
+using ChaoticKit.Data.Structure.Pair;
 using IYaManifest.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -24,7 +24,7 @@ namespace IYaManifest.Core.V1
             get => packageStr;
             set
             {
-                PackageKey = Common_Util.Data.Constraint.StringConveyingHelper.FromString<GroupIdPair>(value);
+                PackageKey = ChaoticKit.Data.Constraint.StringConveyingHelper.FromString<GroupIdPair>(value);
                 packageStr = PackageKey.ConvertToString();
             }
         }

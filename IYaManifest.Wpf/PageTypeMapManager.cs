@@ -1,5 +1,5 @@
-﻿using Common_Util.Enums;
-using Common_Util.Extensions;
+﻿using ChaoticKit.Enums;
+using ChaoticKit.Extensions;
 using IYaManifest.Attributes;
 using IYaManifest.Interfaces;
 using System;
@@ -190,7 +190,7 @@ namespace IYaManifest.Wpf
         /// </summary>
         /// <param name="item"></param>
         /// <param name="conflictDealMode">当准备加入的映射关系出现冲突时 (即已有相同类型相同标签的映射关系), 需要采取的处理方式</param>
-        public void Add(IPageTypeMappingItem item, Common_Util.Enums.AppendConflictDealMode conflictDealMode = AppendConflictDealMode.Override)
+        public void Add(IPageTypeMappingItem item, ChaoticKit.Enums.AppendConflictDealMode conflictDealMode = AppendConflictDealMode.Override)
         {
             ArgumentNullException.ThrowIfNull(item.AssetType);
             if (!MappingItems.TryGetValue(item.AssetType, out var items))
@@ -219,7 +219,7 @@ namespace IYaManifest.Wpf
                         return;
                     case AppendConflictDealMode.Exception:
                         throw new InvalidOperationException(
-                            $"已有相同类型 ({item.AssetType.Name}) 相同标签 ({(item.Tags.Length == 0 ? "无标签": Common_Util.String.StringHelper.Concat(item.Tags, "; "))}) 的项");
+                            $"已有相同类型 ({item.AssetType.Name}) 相同标签 ({(item.Tags.Length == 0 ? "无标签": ChaoticKit.String.StringHelper.Concat(item.Tags, "; "))}) 的项");
                     default: throw new NotImplementedException($"未实现冲突处理方式: {conflictDealMode}");
                 }
             }
@@ -230,7 +230,7 @@ namespace IYaManifest.Wpf
         /// </summary>
         /// <param name="dllPath"></param>
         /// <param name="conflictDealMode">加载过程中如果遇到冲突项 (即已有相同类型相同标签的映射关系), 需要采取的处理方式</param>
-        public void AddFromDll(string dllPath, Common_Util.Enums.AppendConflictDealMode conflictDealMode = AppendConflictDealMode.Override)
+        public void AddFromDll(string dllPath, ChaoticKit.Enums.AppendConflictDealMode conflictDealMode = AppendConflictDealMode.Override)
         {
             List<IPageTypeMappingItem> waitAddItems = [];
             Assembly assembly = Assembly.LoadFrom(dllPath);

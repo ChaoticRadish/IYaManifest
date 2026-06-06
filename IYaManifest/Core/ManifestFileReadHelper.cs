@@ -1,6 +1,6 @@
-﻿using Common_Util.Data.Struct;
-using Common_Util.Data.Structure.Value;
-using Common_Util.Streams;
+﻿using ChaoticKit.Data.Struct;
+using ChaoticKit.Data.Structure.Value;
+using ChaoticKit.Streams;
 using IYaManifest.Defines;
 using IYaManifest.Interfaces;
 using System;
@@ -216,7 +216,7 @@ namespace IYaManifest.Core
             if (readCount != headSize) return defaultTypeOuput = $"读取文件头时, 读取到的 byte 数 ({readCount}) 与预期长度 ({headSize}) 不匹配! ";
 
             // 校验
-            byte crc = Common_Util.Check.CRCHelper.CRC8(new Span<byte>(headData, 0, headSize - 1));
+            byte crc = ChaoticKit.Check.CRCHelper.CRC8(new Span<byte>(headData, 0, headSize - 1));
             if (crc != headData[^1]) return defaultTypeOuput = $"文件头数据校验失败, CRC-8 计算值 ({crc}) != 数据值 ({headData[^1]})";
 
             // 转换为结构体

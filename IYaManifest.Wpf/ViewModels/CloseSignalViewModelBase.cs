@@ -1,4 +1,4 @@
-﻿using Common_Util.Interfaces.Behavior;
+﻿using ChaoticKit.Interfaces.Behavior;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

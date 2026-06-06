@@ -1,8 +1,8 @@
-﻿using Common_Util.Data.Exceptions;
-using Common_Util.Extensions;
-using Common_Util.IO;
-using Common_Util.Module.Command;
-using Common_Util.Streams;
+﻿using ChaoticKit.Data.Exceptions;
+using ChaoticKit.Extensions;
+using ChaoticKit.IO;
+using ChaoticKit.Module.Command;
+using ChaoticKit.Streams;
 using IYaManifest;
 using IYaManifest.Core;
 using IYaManifest.Core.Base;
@@ -64,7 +64,7 @@ namespace IYaManifestDemo.TestPages
             }
         }
 
-        public ICommand ClearCommand => new SampleCommand(_ => clear(), _ => true);
+        public ICommand ClearCommand => new SimpleCommand(_ => clear(), _ => true);
 
         private void clear()
         {
@@ -72,36 +72,36 @@ namespace IYaManifestDemo.TestPages
         }
 
 
-        public ICommand RandomTestText1Command => new SampleCommand(_ => randomTestText1(), _ => true);
+        public ICommand RandomTestText1Command => new SimpleCommand(_ => randomTestText1(), _ => true);
         private void randomTestText1()
         {
-            add(new TestTextAsset1() { Data = Common_Util.Random.RandomStringHelper.GetRandomEnglishString(100), }, 
+            add(new TestTextAsset1() { Data = ChaoticKit.Random.RandomStringHelper.GetRandomEnglishString(100), }, 
                 "RandomText1", IYaManifest.Enums.AssetDataStorageModeEnum.ManifestData);
         }
 
-        public ICommand RandomTestText2Command => new SampleCommand(_ => randomTestText2(), _ => true);
+        public ICommand RandomTestText2Command => new SimpleCommand(_ => randomTestText2(), _ => true);
         private void randomTestText2()
         {
-            add(new TestTextAsset2() { Data = Common_Util.Random.RandomStringHelper.GetRandomEnglishString(100), },
+            add(new TestTextAsset2() { Data = ChaoticKit.Random.RandomStringHelper.GetRandomEnglishString(100), },
                 "RandomText2", IYaManifest.Enums.AssetDataStorageModeEnum.ManifestData);
         }
 
-        public ICommand RandomTestText3Command => new SampleCommand(_ => randomTestText3(), _ => true);
+        public ICommand RandomTestText3Command => new SimpleCommand(_ => randomTestText3(), _ => true);
         private void randomTestText3()
         {
-            add(new TestTextAsset1() { Data = Common_Util.Random.RandomStringHelper.GetRandomEnglishString(100), },
+            add(new TestTextAsset1() { Data = ChaoticKit.Random.RandomStringHelper.GetRandomEnglishString(100), },
                 "RandomText3", IYaManifest.Enums.AssetDataStorageModeEnum.InManifest);
         }
 
-        public ICommand RandomTestText4Command => new SampleCommand(_ => randomTestText4(), _ => true);
+        public ICommand RandomTestText4Command => new SimpleCommand(_ => randomTestText4(), _ => true);
         private void randomTestText4()
         {
-            add(new TestTextAsset2() { Data = Common_Util.Random.RandomStringHelper.GetRandomEnglishString(100), },
+            add(new TestTextAsset2() { Data = ChaoticKit.Random.RandomStringHelper.GetRandomEnglishString(100), },
                 "RandomText4", IYaManifest.Enums.AssetDataStorageModeEnum.InManifest);
         }
 
 
-        public ICommand AddImageCommand => new SampleCommand(_ => addImage(), _ => true);
+        public ICommand AddImageCommand => new SimpleCommand(_ => addImage(), _ => true);
 
         private void addImage()
         {
@@ -181,7 +181,7 @@ namespace IYaManifestDemo.TestPages
             }
         }
 
-        public ICommand CreateFileCommand => new SampleCommand(_ => _ = createFile(), _ => true);
+        public ICommand CreateFileCommand => new SimpleCommand(_ => _ = createFile(), _ => true);
 
         private async Task createFile()
         {
@@ -256,7 +256,7 @@ namespace IYaManifestDemo.TestPages
             }
         }
 
-        public ICommand ReadFileCommand => new SampleCommand(_ => _ = readFile(), _ => true);
+        public ICommand ReadFileCommand => new SimpleCommand(_ => _ = readFile(), _ => true);
 
         private async Task readFile()
         {

@@ -1,5 +1,5 @@
-﻿using Common_Util.Interfaces.Behavior;
-using Common_Util.Log;
+﻿using ChaoticKit.Interfaces.Behavior;
+using ChaoticKit.Log;
 using IYaManifest;
 using IYaManifest.Interfaces;
 using System;

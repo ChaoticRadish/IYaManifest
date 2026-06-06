@@ -1,6 +1,6 @@
-﻿using Common_Util.Attributes.Xml;
-using Common_Util.Data.Structure.Value;
-using Common_Util.Module;
+﻿using ChaoticKit.Attributes.Xml;
+using ChaoticKit.Data.Structure.Value;
+using ChaoticKit.Module;
 using IYaManifest.Enums;
 using IYaManifest.Interfaces;
 using System;
@@ -103,7 +103,7 @@ namespace IYaManifest.Core.V1
     {
         public required new TAssetTypeEnum AssetType
         { 
-            get => Common_Util.EnumHelper.ConvertOrDefault<TAssetTypeEnum>(base.AssetType, default!); 
+            get => ChaoticKit.EnumHelper.ConvertOrDefault<TAssetTypeEnum>(base.AssetType, default!); 
             set => base.AssetType = value.ToString(); 
         }
     }

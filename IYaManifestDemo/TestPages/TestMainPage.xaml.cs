@@ -1,6 +1,6 @@
-﻿using Common_Util.Log;
-using Common_Wpf.Controls.FeatureGroup;
-using Common_Wpf.Extensions;
+﻿using ChaoticKit.Log;
+using ChaoticKit.Wpf.Controls.FeatureGroup;
+using ChaoticKit.Wpf.Extensions;
 using IYaManifest;
 using System;
 using System.Collections.Generic;

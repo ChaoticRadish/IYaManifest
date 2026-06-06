@@ -1,6 +1,6 @@
-﻿using Common_Util.Data.Exceptions;
-using Common_Util.Log;
-using Common_Util.Module.Command;
+﻿using ChaoticKit.Data.Exceptions;
+using ChaoticKit.Log;
+using ChaoticKit.Module.Command;
 using IYaManifest.Core;
 using IYaManifest.Core.V1;
 using IYaManifest.Defines;
@@ -40,7 +40,7 @@ namespace IYaManifestDemo.ViewModel
         private string fileName { get; set; } = string.Empty;
         public string FileName { get => fileName; private set { fileName = value; OnPropertyChanged(); } }
 
-        public ICommand SelectFileCommand => new SampleCommand(_ => selectFile(), _ => true);
+        public ICommand SelectFileCommand => new SimpleCommand(_ => selectFile(), _ => true);
         private void selectFile()
         {
             OpenFileDialog dialog = new()
@@ -54,7 +54,7 @@ namespace IYaManifestDemo.ViewModel
             }
         }
 
-        public ICommand ReadFileCommand => new SampleCommand(_ => _ = readFile(), _ => true);
+        public ICommand ReadFileCommand => new SimpleCommand(_ => _ = readFile(), _ => true);
         private async Task readFile()
         {
             OperationLogger?.Info("尝试读取文件数据");
@@ -105,7 +105,7 @@ namespace IYaManifestDemo.ViewModel
             ManifestItems.Clear();
         }
 
-        public ICommand ItemDetailCommand => new SampleCommand(itemDetail, _ => true);
+        public ICommand ItemDetailCommand => new SimpleCommand(itemDetail, _ => true);
         private void itemDetail(object? obj)
         {
             if (obj == null)
@@ -194,7 +194,7 @@ namespace IYaManifestDemo.ViewModel
         public bool LazyAssetLoaded { get => lazyAsset?.Loaded ?? false; }
         public IAsset? LazyAssetWrappingAsset { get => lazyAsset?.Asset; }
 
-        public ICommand LazyAssetLoadCommand => new SampleCommand(_ =>
+        public ICommand LazyAssetLoadCommand => new SimpleCommand(_ =>
         {
             OperationLogger?.Info("加载当前选择的懒加载资源");
             if (LazyAsset != null)
@@ -204,7 +204,7 @@ namespace IYaManifestDemo.ViewModel
             }
         }, _ => true);
 
-        public ICommand LazyAssetUnloadCommand => new SampleCommand(_ =>
+        public ICommand LazyAssetUnloadCommand => new SimpleCommand(_ =>
         {
             OperationLogger?.Info("卸载当前选择的懒加载资源");
             if (LazyAsset != null)
@@ -220,7 +220,7 @@ namespace IYaManifestDemo.ViewModel
 
 
         #region 详情弹窗
-        public ICommand OpenDetailWindowCommand => new SampleCommand(openDetailWindow, _ => true);
+        public ICommand OpenDetailWindowCommand => new SimpleCommand(openDetailWindow, _ => true);
         private void openDetailWindow(object? obj)
         {
             IAsset? asset;

@@ -1,4 +1,4 @@
-﻿using Common_Util.Log;
+﻿using ChaoticKit.Log;
 using IYaManifest.Interfaces;
 using IYaManifest.Wpf;
 using IYaManifest.Wpf.Windows;

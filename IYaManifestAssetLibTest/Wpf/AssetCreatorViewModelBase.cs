@@ -1,6 +1,6 @@
-﻿using Common_Util.Data.Struct;
-using Common_Util.Interfaces.Behavior;
-using Common_Util.Module.Command;
+﻿using ChaoticKit.Data.Struct;
+using ChaoticKit.Interfaces.Behavior;
+using ChaoticKit.Module.Command;
 using IYaManifest;
 using IYaManifest.Interfaces;
 using System;
@@ -49,8 +49,8 @@ namespace IYaManifestAssetLibTest.Wpf
             baseInterfaceOnCloseSignal?.Invoke(this, b);
         }
 
-        public ICommand DoneCloseCommand => new SampleCommand(_ => TriggerOnCloseSignal(true), _ => true);
-        public ICommand CancelCloseCommand => new SampleCommand(_ => TriggerOnCloseSignal(null), _ => true);
+        public ICommand DoneCloseCommand => new SimpleCommand(_ => TriggerOnCloseSignal(true), _ => true);
+        public ICommand CancelCloseCommand => new SimpleCommand(_ => TriggerOnCloseSignal(null), _ => true);
 
         #endregion
 
@@ -78,7 +78,7 @@ namespace IYaManifestAssetLibTest.Wpf
         #endregion
 
         #region 操作
-        public ICommand ResetCommand => new SampleCommand(_ => Reset(), _ => true);
+        public ICommand ResetCommand => new SimpleCommand(_ => Reset(), _ => true);
         /// <summary>
         /// 重置当前输入状态
         /// </summary>
@@ -88,7 +88,7 @@ namespace IYaManifestAssetLibTest.Wpf
             CreateResult = null;
         }
 
-        public ICommand CreateCommand => new SampleCommand(_ => Create(), _ => true);
+        public ICommand CreateCommand => new SimpleCommand(_ => Create(), _ => true);
         public void Create()
         {
             OperationResultEx<TAsset> result;

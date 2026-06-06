@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:IYaManifest.Wpf.Windows"
-        xmlns:converter="clr-namespace:Common_Wpf.Converter;assembly=Common_Wpf"
+        xmlns:converter="clr-namespace:ChaoticKit.Wpf.Converter;assembly=ChaoticKit.Wpf"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type={x:Type local:CommonAssetDisplayerWindow01ViewModel}}"
         Title="CommonAssetDisplayerWindow01" Height="450" Width="800">

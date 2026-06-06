@@ -1,5 +1,5 @@
-﻿using Common_Util.Enums;
-using Common_Util.Extensions;
+﻿using ChaoticKit.Enums;
+using ChaoticKit.Extensions;
 using IYaManifest.Attributes;
 using IYaManifest.Core;
 using IYaManifest.Interfaces;

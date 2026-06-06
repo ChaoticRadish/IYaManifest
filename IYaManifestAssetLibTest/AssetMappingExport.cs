@@ -1,5 +1,5 @@
-﻿using Common_Util.Enums;
-using Common_Util.Interfaces.Owner;
+﻿using ChaoticKit.Enums;
+using ChaoticKit.Interfaces.Owner;
 using IYaManifest.Attributes;
 using IYaManifest.Interfaces;
 using IYaManifest.Wpf;

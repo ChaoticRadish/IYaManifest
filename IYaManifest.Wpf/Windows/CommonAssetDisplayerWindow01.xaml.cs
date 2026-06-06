@@ -1,4 +1,4 @@
-﻿using Common_Util.Interfaces.Behavior;
+﻿using ChaoticKit.Interfaces.Behavior;
 using IYaManifest.Interfaces;
 using System;
 using System.Collections.Generic;

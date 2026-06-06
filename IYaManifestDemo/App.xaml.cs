@@ -1,5 +1,5 @@
-﻿using Common_Util.IO;
-using Common_Wpf.Themes;
+﻿using ChaoticKit.IO;
+using ChaoticKit.Wpf.Themes;
 using IYaManifest;
 using IYaManifest.Core;
 using IYaManifest.Core.V1;
@@ -94,7 +94,7 @@ namespace IYaManifestDemo
                 displayerPageClass: typeof(ImageAssetDisplayerPage),
                 editorPageClass: typeof(ImageAssetEditorPage));
 
-            MappingHelper.LoadAllExDll(Common_Util.Enums.AppendConflictDealMode.Ignore, null);
+            MappingHelper.LoadAllExDll(ChaoticKit.Enums.AppendConflictDealMode.Ignore, null);
         }
 
         private void setDefaultMapping(

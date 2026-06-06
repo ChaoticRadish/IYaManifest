@@ -1,14 +1,14 @@
-﻿using Common_Util.Data.Struct;
-using Common_Util.Data.Structure.Tree;
-using Common_Util.Data.Structure.Tree.Extensions;
-using Common_Util.Data.Structure.Value;
-using Common_Util.Data.Structure.Value.Extensions;
-using Common_Util.Extensions;
-using Common_Util.IO;
-using Common_Util.Log;
-using Common_Util.Module.Command;
-using Common_Util.Streams;
-using Common_Util.String;
+﻿using ChaoticKit.Data.Struct;
+using ChaoticKit.Data.Structure.Tree;
+using ChaoticKit.Data.Structure.Tree.Extensions;
+using ChaoticKit.Data.Structure.Value;
+using ChaoticKit.Data.Structure.Value.Extensions;
+using ChaoticKit.Extensions;
+using ChaoticKit.IO;
+using ChaoticKit.Log;
+using ChaoticKit.Module.Command;
+using ChaoticKit.Streams;
+using ChaoticKit.String;
 using IYaManifest.Interfaces;
 using IYaManifest.Core;
 using IYaManifest.Core.Base;
@@ -263,7 +263,7 @@ namespace IYaManifestDemo.ViewModel
 
 
         #region 操作
-        public ICommand ResetCommand => new SampleCommand(Reset);
+        public ICommand ResetCommand => new SimpleCommand(Reset);
         public void Reset()
         {
             try
@@ -291,7 +291,7 @@ namespace IYaManifestDemo.ViewModel
             }
         }
 
-        public ICommand CreateFileCommand => new SampleCommand(CreateFile);
+        public ICommand CreateFileCommand => new SimpleCommand(CreateFile);
         public void CreateFile()
         {
             _ = createFile();
@@ -346,7 +346,7 @@ namespace IYaManifestDemo.ViewModel
             }
         }
 
-        public ICommand OpenManifestCommand => new SampleCommand(OpenManifest);
+        public ICommand OpenManifestCommand => new SimpleCommand(OpenManifest);
         public void OpenManifest()
         {
             _ = openManifestAsync();
@@ -546,7 +546,7 @@ namespace IYaManifestDemo.ViewModel
         public ObservableCollection<string> AssetTypes { get; } = [];
 
 
-        public ICommand UpdateAssetTypesCommand => new SampleCommand(_ => UpdateAssetTypes(), _ => true);
+        public ICommand UpdateAssetTypesCommand => new SimpleCommand(_ => UpdateAssetTypes(), _ => true);
         private void UpdateAssetTypes()
         {
             AssetTypes.Clear();
@@ -676,7 +676,7 @@ namespace IYaManifestDemo.ViewModel
                 OnPropertyChanged();
             }
         }
-        public ICommand CreateMd5ValueCommand => new SampleCommand(createMd5Value);
+        public ICommand CreateMd5ValueCommand => new SimpleCommand(createMd5Value);
         private void createMd5Value()
         {
             OperationLogger?.Info("生成当前输入资源的 MD5 值以预览");
@@ -760,7 +760,7 @@ namespace IYaManifestDemo.ViewModel
             }
         }
 
-        public ICommand ImageAssetSelectImageFile => new SampleCommand(_ => imageAssetSelectImageFile());
+        public ICommand ImageAssetSelectImageFile => new SimpleCommand(_ => imageAssetSelectImageFile());
         private void imageAssetSelectImageFile()
         {
             OperationLogger?.Info("选择图片文件作为图片资源");
@@ -855,7 +855,7 @@ namespace IYaManifestDemo.ViewModel
 
         #region 树操作
 
-        public ICommand RemoveTreeNodeCommand => new SampleCommand(removeTreeNode);
+        public ICommand RemoveTreeNodeCommand => new SimpleCommand(removeTreeNode);
         private void removeTreeNode(object? obj)
         {
             if (_judgeAssetCode(obj, out var code))
@@ -868,7 +868,7 @@ namespace IYaManifestDemo.ViewModel
             }
         }
 
-        public ICommand AddCurrentInputToList => new SampleCommand(addCurrentInputToList);
+        public ICommand AddCurrentInputToList => new SimpleCommand(addCurrentInputToList);
 
         private void addCurrentInputToList()
         {
@@ -1028,7 +1028,7 @@ namespace IYaManifestDemo.ViewModel
         }
 
 
-        public ICommand OpenAssetCreatorPageCommand => new SampleCommand(OpenAssetCreatorPage);
+        public ICommand OpenAssetCreatorPageCommand => new SimpleCommand(OpenAssetCreatorPage);
         private void OpenAssetCreatorPage()
         {
             PageCreateAsset = null;
@@ -1050,7 +1050,7 @@ namespace IYaManifestDemo.ViewModel
 
         #region 清单项详情
 
-        public ICommand ItemDetailCommand => new SampleCommand(itemDetail, _ => true);
+        public ICommand ItemDetailCommand => new SimpleCommand(itemDetail, _ => true);
         private void itemDetail(object? obj)
         {
             if (_judgeManifestItem(obj, out var item))
@@ -1063,7 +1063,7 @@ namespace IYaManifestDemo.ViewModel
         #endregion
 
         #region 清单项编辑
-        public ICommand ItemEditCommand => new SampleCommand(itemEdit, _ => true);
+        public ICommand ItemEditCommand => new SimpleCommand(itemEdit, _ => true);
         private void itemEdit(object? obj)
         {
             if (_judgeManifestItem(obj, out var item))

@@ -1,4 +1,4 @@
-﻿using Common_Util.Interfaces.Behavior;
+﻿using ChaoticKit.Interfaces.Behavior;
 using IYaManifest.Interfaces;
 using IYaManifest.Wpf.ViewModels;
 using System;

@@ -79,7 +79,7 @@ namespace IYaManifest.Core.Base
             Marshal.Copy(ptr, headData, 0, headSize);
             Marshal.FreeHGlobal(ptr);
 
-            head.CRC8 = Common_Util.Check.CRCHelper.CRC8(headData.AsSpan(0, headSize - 1));  // 减去一个 byte, 即存放 CRC 校验码的位置
+            head.CRC8 = ChaoticKit.Check.CRCHelper.CRC8(headData.AsSpan(0, headSize - 1));  // 减去一个 byte, 即存放 CRC 校验码的位置
             headData[^1] = head.CRC8;
 
             dest.Seek(0, SeekOrigin.Begin);

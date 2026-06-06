@@ -1,10 +1,10 @@
-﻿using Common_Util.Data.Exceptions;
-using Common_Util.Data.Struct;
-using Common_Util.Extensions;
-using Common_Util.IO;
-using Common_Util.Streams;
-using Common_Util.String;
-using Common_Util.Xml;
+﻿using ChaoticKit.Data.Exceptions;
+using ChaoticKit.Data.Struct;
+using ChaoticKit.Extensions;
+using ChaoticKit.IO;
+using ChaoticKit.Streams;
+using ChaoticKit.String;
+using ChaoticKit.Xml;
 using IYaManifest.Core.Base;
 using IYaManifest.Interfaces;
 using System;

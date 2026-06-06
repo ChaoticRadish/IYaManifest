@@ -1,5 +1,5 @@
-﻿using Common_Util.Extensions;
-using Common_Util.Interfaces.Owner;
+﻿using ChaoticKit.Extensions;
+using ChaoticKit.Interfaces.Owner;
 using IYaManifest.Interfaces;
 using System;
 using System.Collections.Generic;

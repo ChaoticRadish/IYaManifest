@@ -1,6 +1,6 @@
-﻿using Common_Util.Data.Struct;
-using Common_Util.Extensions;
-using Common_Util.Interfaces.Behavior;
+﻿using ChaoticKit.Data.Struct;
+using ChaoticKit.Extensions;
+using ChaoticKit.Interfaces.Behavior;
 using IYaManifest;
 using IYaManifest.Interfaces;
 using System;

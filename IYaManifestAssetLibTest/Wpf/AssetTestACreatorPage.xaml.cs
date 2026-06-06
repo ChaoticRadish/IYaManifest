@@ -1,5 +1,5 @@
-﻿using Common_Util.Data.Struct;
-using Common_Util.Interfaces.Behavior;
+﻿using ChaoticKit.Data.Struct;
+using ChaoticKit.Interfaces.Behavior;
 using IYaManifest.Interfaces;
 using System;
 using System.Collections.Generic;

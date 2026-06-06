@@ -1,9 +1,9 @@
-﻿using Common_Util.Data.Exceptions;
-using Common_Util.Data.Struct;
-using Common_Util.Extensions;
-using Common_Util.Interfaces.Behavior;
-using Common_Util.Log;
-using Common_Util.Module.Command;
+﻿using ChaoticKit.Data.Exceptions;
+using ChaoticKit.Data.Struct;
+using ChaoticKit.Extensions;
+using ChaoticKit.Interfaces.Behavior;
+using ChaoticKit.Log;
+using ChaoticKit.Module.Command;
 using IYaManifest.Interfaces;
 using IYaManifestDemo.Assets;
 using Microsoft.Win32;
@@ -151,7 +151,7 @@ namespace IYaManifestDemo.Pages.Assets
             baseInterfaceOnCloseSignal?.Invoke(this, b);
         }
 
-        public ICommand DoneCloseCommand => new SampleCommand(
+        public ICommand DoneCloseCommand => new SimpleCommand(
             _ =>
             {
                 EditDone();
@@ -161,13 +161,13 @@ namespace IYaManifestDemo.Pages.Assets
                 }
             },
             _ => true);
-        public ICommand CancelCloseCommand => new SampleCommand(_ => TriggerOnCloseSignal(null), _ => true);
+        public ICommand CancelCloseCommand => new SimpleCommand(_ => TriggerOnCloseSignal(null), _ => true);
 
         #endregion
 
 
         #region 操作
-        public ICommand ResetCommand => new SampleCommand(Reset);
+        public ICommand ResetCommand => new SimpleCommand(Reset);
 
         [MemberNotNull(nameof(CreateAssetResult))]
         public override void EditDone()
@@ -215,7 +215,7 @@ namespace IYaManifestDemo.Pages.Assets
 
         public bool HasImageFileName { get => imageFileName != null; }
 
-        public ICommand SelectImageFileCommand => new SampleCommand(selectImageFile);
+        public ICommand SelectImageFileCommand => new SimpleCommand(selectImageFile);
 
         public void selectImageFile()
         {
@@ -300,7 +300,7 @@ namespace IYaManifestDemo.Pages.Assets
         #region 创建为资源
 
 
-        public ICommand CreateAssetCommand => new SampleCommand(createAsset);
+        public ICommand CreateAssetCommand => new SimpleCommand(createAsset);
 
         [MemberNotNull(nameof(CreateAssetResult))]
         private void createAsset()

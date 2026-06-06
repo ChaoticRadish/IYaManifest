@@ -1,6 +1,6 @@
-﻿using Common_Util.Data.Exceptions;
-using Common_Util.Data.Struct;
-using Common_Util.Data.Structure.Value;
+﻿using ChaoticKit.Data.Exceptions;
+using ChaoticKit.Data.Struct;
+using ChaoticKit.Data.Structure.Value;
 using IYaManifest.Core.Base;
 using IYaManifest.Enums;
 using IYaManifest.Interfaces;

@@ -1,5 +1,5 @@
-﻿using Common_Util.Log;
-using Common_Util.Module.Command;
+﻿using ChaoticKit.Log;
+using ChaoticKit.Module.Command;
 using IYaManifest.Core;
 using IYaManifest.Interfaces;
 using IYaManifest.Wpf;
@@ -52,8 +52,8 @@ namespace IYaManifestDemo.Pages
         public ILevelLogger? TrackLogger { get; set; }
 
 
-        public ICommand RefreshCommand => new SampleCommand(refresh);
-        public ICommand ReloadCommand => new SampleCommand(reload);
+        public ICommand RefreshCommand => new SimpleCommand(refresh);
+        public ICommand ReloadCommand => new SimpleCommand(reload);
 
         private void refresh()
         {
@@ -82,7 +82,7 @@ namespace IYaManifestDemo.Pages
         {
             OperationLogger?.Info("重新加载扩展 DLL 文件");
             
-            MappingHelper.LoadAllExDll(Common_Util.Enums.AppendConflictDealMode.Override, TrackLogger);
+            MappingHelper.LoadAllExDll(ChaoticKit.Enums.AppendConflictDealMode.Override, TrackLogger);
             refresh();
         }
 
@@ -118,7 +118,7 @@ namespace IYaManifestDemo.Pages
 
             public string[] Tags { get; } = item.Tags ?? [];
 
-            public string TagsStr { get => Tags.Length == 0 ? " < 无标签 > " : Common_Util.String.StringHelper.Concat(Tags, "; "); }
+            public string TagsStr { get => Tags.Length == 0 ? " < 无标签 > " : ChaoticKit.String.StringHelper.Concat(Tags, "; "); }
 
             public IPageTypeMappingItem MappingItem { get; } = item;
         }

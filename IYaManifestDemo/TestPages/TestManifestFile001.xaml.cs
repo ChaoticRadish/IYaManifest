@@ -1,6 +1,6 @@
-﻿using Common_Util.Data.Struct;
-using Common_Util.Extensions;
-using Common_Util.Module.Command;
+﻿using ChaoticKit.Data.Struct;
+using ChaoticKit.Extensions;
+using ChaoticKit.Module.Command;
 using IYaManifest;
 using IYaManifest.Core;
 using IYaManifest.Core.Base;
@@ -58,7 +58,7 @@ namespace IYaManifestDemo.TestPages
         public string DataDataInput { get => dataDataInput; set { dataDataInput = value; OnPropertyChanged(); } }
 
 
-        public ICommand TestCommand => new SampleCommand(_ => test(), _ => true);
+        public ICommand TestCommand => new SimpleCommand(_ => test(), _ => true);
         private void test()
         {
             Task.Run(async () =>
@@ -140,7 +140,7 @@ namespace IYaManifestDemo.TestPages
             }
         } 
 
-        public ICommand TestCommand => new SampleCommand(_ => test(), _ => true);
+        public ICommand TestCommand => new SimpleCommand(_ => test(), _ => true);
         private void test()
         {
             Task.Run(async () =>

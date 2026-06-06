@@ -1,5 +1,5 @@
-﻿using Common_Util.Interfaces.Behavior;
-using Common_Util.Module.Command;
+﻿using ChaoticKit.Interfaces.Behavior;
+using ChaoticKit.Module.Command;
 using IYaManifest.Interfaces;
 using IYaManifestDemo.Assets;
 using IYaManifestDemo.ViewModel;

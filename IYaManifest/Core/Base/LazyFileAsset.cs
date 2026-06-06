@@ -1,6 +1,6 @@
-﻿using Common_Util.Data.Exceptions;
-using Common_Util.Data.Struct;
-using Common_Util.Streams;
+﻿using ChaoticKit.Data.Exceptions;
+using ChaoticKit.Data.Struct;
+using ChaoticKit.Streams;
 using IYaManifest.Interfaces;
 using System;
 using System.Collections.Generic;

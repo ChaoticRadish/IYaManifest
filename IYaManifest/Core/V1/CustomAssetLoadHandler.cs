@@ -1,8 +1,8 @@
-﻿using Common_Util;
-using Common_Util.Data.Exceptions;
-using Common_Util.Data.Struct;
-using Common_Util.Data.Structure.Value;
-using Common_Util.IO;
+﻿using ChaoticKit;
+using ChaoticKit.Data.Exceptions;
+using ChaoticKit.Data.Struct;
+using ChaoticKit.Data.Structure.Value;
+using ChaoticKit.IO;
 using IYaManifest.Core.Base;
 using IYaManifest.Interfaces;
 using System;
@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static Common_Util.Module.LayerComponentBaseLong;
+using static ChaoticKit.Module.LayerComponentBaseLong;
 
 namespace IYaManifest.Core.V1
 {

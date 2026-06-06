@@ -1,4 +1,4 @@
-﻿using Common_Util.Module.Command;
+﻿using ChaoticKit.Module.Command;
 using IYaManifest;
 using IYaManifest.Core;
 using IYaManifest.Extensions;
@@ -42,7 +42,7 @@ namespace IYaManifestDemo.TestPages
     {
         public MappingConfig Config { get; set; } = new();
 
-        public ICommand AppendDllCommand => new SampleCommand(_ => appendDll(), _ => true);
+        public ICommand AppendDllCommand => new SimpleCommand(_ => appendDll(), _ => true);
 
         private void appendDll()
         {
@@ -54,8 +54,8 @@ namespace IYaManifestDemo.TestPages
                 {
                     Globals.TestLogger?.Info("加载 DLL 追加映射配置: " + dialog.FileName);
                     Config.AppendDll(
-                        Common_Util.Enums.AppendConflictDealMode.Exception, 
-                        Common_Util.Enums.AppendConflictDealMode.Exception, 
+                        ChaoticKit.Enums.AppendConflictDealMode.Exception, 
+                        ChaoticKit.Enums.AppendConflictDealMode.Exception, 
                         dialog.FileName);
                     Globals.TestLogger?.Info("加载 DLL 追加映射配置完成");
                 }
@@ -73,7 +73,7 @@ namespace IYaManifestDemo.TestPages
 
         public ReadOnlyDictionary<Type, IPageTypeMappingItem[]> AllPageTypeMappingItem => PageTypeMapManager.Instance.All;
 
-        public ICommand AddPageTypeMappingFromDllCommand => new SampleCommand(_ => addPageTypeMappingFromDll(), _ => true);
+        public ICommand AddPageTypeMappingFromDllCommand => new SimpleCommand(_ => addPageTypeMappingFromDll(), _ => true);
         private void addPageTypeMappingFromDll()
         {
             try

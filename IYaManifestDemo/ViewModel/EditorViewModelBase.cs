@@ -1,5 +1,5 @@
-﻿using Common_Util.Interfaces.Behavior;
-using Common_Util.Module.Command;
+﻿using ChaoticKit.Interfaces.Behavior;
+using ChaoticKit.Module.Command;
 using IYaManifest.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -46,11 +46,11 @@ namespace IYaManifestDemo.ViewModel
             baseInterfaceOnCloseSignal?.Invoke(this, b);
         }
 
-        public ICommand DoneCloseCommand => new SampleCommand(_ => TriggerOnCloseSignal(true), _ => true);
-        public ICommand CancelCloseCommand => new SampleCommand(_ => TriggerOnCloseSignal(null), _ => true);
+        public ICommand DoneCloseCommand => new SimpleCommand(_ => TriggerOnCloseSignal(true), _ => true);
+        public ICommand CancelCloseCommand => new SimpleCommand(_ => TriggerOnCloseSignal(null), _ => true);
 
         #endregion
 
-        public ICommand ResetCommand => new SampleCommand(Reset);
+        public ICommand ResetCommand => new SimpleCommand(Reset);
     }
 }

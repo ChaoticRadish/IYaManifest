@@ -1,4 +1,4 @@
-﻿using Common_Util.Extensions;
+﻿using ChaoticKit.Extensions;
 using IYaManifest.Interfaces;
 using IYaManifestDemo.ViewModel;
 using System;

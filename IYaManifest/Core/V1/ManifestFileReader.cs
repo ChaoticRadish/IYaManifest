@@ -5,16 +5,16 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
-using Common_Util.Data.Exceptions;
-using Common_Util.Data.Struct;
-using Common_Util.IO;
-using Common_Util.Streams;
-using Common_Util.Xml;
+using ChaoticKit.Data.Exceptions;
+using ChaoticKit.Data.Struct;
+using ChaoticKit.IO;
+using ChaoticKit.Streams;
+using ChaoticKit.Xml;
 using IYaManifest.Core.Base;
 using IYaManifest.Defines;
 using IYaManifest.Enums;
 using IYaManifest.Interfaces;
-using static Common_Util.Module.LayerComponentBaseLong;
+using static ChaoticKit.Module.LayerComponentBaseLong;
 
 namespace IYaManifest.Core.V1
 {
@@ -133,7 +133,7 @@ namespace IYaManifest.Core.V1
                                 IEnumerable<string>? append = null;
                                 if (dic.TryGetValue(nameof(ManifestItem.StorageMode), out string? value))
                                 {
-                                    if (value != null && Common_Util.EnumHelper.TryConvert<Enums.AssetDataStorageModeEnum>(value, out var mode))
+                                    if (value != null && ChaoticKit.EnumHelper.TryConvert<Enums.AssetDataStorageModeEnum>(value, out var mode))
                                     {
                                         if (mode == Enums.AssetDataStorageModeEnum.InManifest)
                                         {

@@ -1,4 +1,4 @@
-﻿using Common_Util.Data.Struct;
+﻿using ChaoticKit.Data.Struct;
 using IYaManifest.Interfaces;
 using System;
 using System.Collections.Generic;

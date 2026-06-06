@@ -1,4 +1,4 @@
-﻿using Common_Util.Data.Struct;
+﻿using ChaoticKit.Data.Struct;
 using IYaManifest.Core.Base;
 using IYaManifest.Core;
 using IYaManifest.Interfaces;
@@ -11,8 +11,8 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using Common_Util.Attributes.General;
-using Common_Util.IO;
+using ChaoticKit.Attributes.General;
+using ChaoticKit.IO;
 
 namespace IYaManifestDemo.Assets
 {
